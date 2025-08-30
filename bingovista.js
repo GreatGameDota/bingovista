@@ -30,7 +30,7 @@
  *	(anywhere) more entries.  Make sure `canv` contains a valid canvas of the sprite
  *	sheet, and `frames`, the collection of sprite names and coordinates.
  */
-const atlases = [
+export const atlases = [
 	{ img: "bvicons.png",      txt: "bvicons.txt",      canv: undefined, frames: {} },	/**< anything not found below */
 	{ img: "bingoicons.png",   txt: "bingoicons.txt",   canv: undefined, frames: {} },	/**< from Bingo mod */
 	{ img: "uispritesmsc.png", txt: "uispritesmsc.txt", canv: undefined, frames: {} }, 	/**< from DLC       */
@@ -112,7 +112,7 @@ var map_link_base = "https://noblecat57.github.io/map.html";
  *		toBin: <Uint8Array>	//	binary format of whole board, including meta and concatenated goals
  *	};
  */
-var board;
+export var board = {};
 
 /**
  *	Current selection cursor on the board (click on board, or focus board 
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById("textbox").value = "";
 		var u = new URL(document.URL);
 		u.search = "";
-		history.pushState(null, "", u.href);
+		window.history.pushState(null, "", u.href);
 	});
 	document.getElementById("parse").addEventListener("click", parseText);
 	document.getElementById("copy").addEventListener("click", copyText);
@@ -534,7 +534,7 @@ function parseText(e) {
 	s = binToBase64u(board.toBin);
 	var u = new URL(document.URL);
 	u.searchParams.set("b", s);
-	history.pushState(null, "", u.href);
+	window.history.pushState(null, "", u.href);
 
 	if (selected !== undefined)
 		selectSquare(selected.col, selected.row);
@@ -744,7 +744,7 @@ function setCursor(row, col) {
 /**
  *	Draw a challenge square to the specified canvas at the specified location (top-left corner).
  */
-function drawSquare(ctx, goal, x, y, size) {
+export function drawSquare(ctx, goal, x, y, size) {
 	ctx.beginPath();
 	ctx.strokeStyle = size.color;
 	ctx.lineWidth = size.border;
@@ -1109,7 +1109,7 @@ function binGoalToText(c) {
  *	Maintain sync between CHALLENGES, BINARY_TO_STRING_DEFINITIONS and
  *	BingoEnum_CHALLENGES.
  */
-const CHALLENGES = {
+export const CHALLENGES = {
 	BingoChallenge: function(desc) {
 		const thisname = "BingoChallenge";
 		//	Keep as template and default; behavior is as a zero-terminated string container
@@ -1307,7 +1307,7 @@ const CHALLENGES = {
 		var amt = parseInt(amounts[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
-		var p;
+		var p, d;
 		if (speci[1] === "true") {
 			var r;
 			if (items[1] === "MS")
@@ -2331,7 +2331,7 @@ const CHALLENGES = {
 			throw new TypeError(thisname + ": error, any shelter flag \"" + any[1] + "\" not 'true' or 'false'");
 		var amt = parseInt(amounts[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
-			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
+			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var r = ".";
 		if (reg[1] !== "Any Region") {
 			r = (regionCodeToDisplayName[reg[1]] || "") + " / " + (regionCodeToDisplayNameSaint[reg[1]] || "");
@@ -3106,7 +3106,7 @@ const CHALLENGES = {
 		var amt = parseInt(amounts[1]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
-			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
+			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
 		b[3] = amt;
@@ -4488,7 +4488,7 @@ const BingoEnum_CHARACTERS = [
 	"Night",
 ]
 
-const BingoEnum_CharToDisplayText = {
+export const BingoEnum_CharToDisplayText = {
 	"Yellow":     "Monk",
 	"White":      "Survivor",
 	"Red":        "Hunter",
@@ -5399,7 +5399,7 @@ const BINARY_TO_STRING_DEFINITIONS = [
  *	value: old/external name
  *	[not present]: no change
  */
-ChallengeUpgrades = {
+const ChallengeUpgrades = {
 	//	< v0.80
 	"BingoVistaExChallenge":     "BingoVistaChallenge",
 	//	v1.092
@@ -5660,7 +5660,7 @@ function setMeta() {
 
 	if (board === undefined || document.getElementById("hdrttl") === null
 			|| document.getElementById("hdrchar") === null
-			|| getElementContent("hdrshel") === null) {
+			|| document.getElementById("hdrshel").value === null) {
 		console.log("Need a board to set.");
 		return;
 	}
@@ -6008,6 +6008,7 @@ function generateRandomRandomGoals(n) {
  */
 function generateOneOfEverything() {
 	var s = "White;";
+	var goalNum;
 	for (var i = 0; i < BINARY_TO_STRING_DEFINITIONS.length - GENERATE_BLACKLIST.length; i++) {
 		goalNum = i;
 		for (var j = 0; j < GENERATE_BLACKLIST.length; j++) {
