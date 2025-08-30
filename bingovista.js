@@ -112,7 +112,7 @@ var map_link_base = "https://noblecat57.github.io/map.html";
  *		toBin: <Uint8Array>	//	binary format of whole board, including meta and concatenated goals
  *	};
  */
-export var board = {};
+var board;
 
 /**
  *	Current selection cursor on the board (click on board, or focus board 
@@ -477,7 +477,7 @@ function parseText(e) {
 			if (type === "BingoMoonCloak") type = "BingoMoonCloakChallenge";	//	1.08 hack
 			if (CHALLENGES[type] !== undefined) {
 				try {
-					board.goals.push(CHALLENGES[type](desc));
+					board.goals.push(CHALLENGES[type](desc, board));
 				} catch (er) {
 					board.goals.push(CHALLENGES["BingoChallenge"]( [
 						"Error: " + er.message + "; descriptor: " + desc.join("><") ] ));
@@ -1201,7 +1201,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoBombTollChallenge: function(desc) {
+	BingoBombTollChallenge: function(desc, _board) {
 		const thisname = "BingoBombTollChallenge";
 		//	desc of format (< v1.2) ["System.String|gw_c05|Scavenger Toll|1|tolls", "System.Boolean|false|Pass the Toll|0|NULL", "0", "0"]
 		//	or (>= 1.2) ["System.Boolean|true|Specific toll|0|NULL", "System.String|gw_c05|Scavenger Toll|3|tolls", "System.Boolean|false|Pass the Toll|2|NULL", "0", "System.Int32|3|Amount|1|NULL", "empty", "0", "0"]
@@ -1285,7 +1285,7 @@ export const CHALLENGES = {
 			description: d,
 			comments: "A hit is registered within a 500-unit radius of the toll. Bomb and pass can be done in either order within a cycle; or even bombed in a previous cycle, then passed later.<br>" +
 			"When the <span class=\"code\">specific</span> flag is set, <span class=\"code\">amount</span> and <span class=\"code\">current</span> are unused; when cleared, <span class=\"code\">Scavenger Toll</span> is unused.<br>" +
-			"The <span class=\"code\">bombed</span> list records the state of the multi-toll version. It's a dictionary of the form: <span class=\"code\">{room name}|{false/true}[%...]</span>, where the braces are replaced with the respective values, and <span class=\"code\">|</span> and <span class=\"code\">%</span> are literal, and (\"...\") indicates subsequent key-value pairs; or <span class=\"code\">empty</span> when empty. (Room names are case-sensitive, matching the game-internal naming.)  A room is added to the list when bombed, with a Boolean value of <span class=\"code\">false</span> before passing, or <span class=\"code\">true</span> after. By preloading this list, a customized \"all but these tolls\" challenge could be crafted (but, do note the list does not show in-game!)." + getMapLink(v[1].toUpperCase()),
+			"The <span class=\"code\">bombed</span> list records the state of the multi-toll version. It's a dictionary of the form: <span class=\"code\">{room name}|{false/true}[%...]</span>, where the braces are replaced with the respective values, and <span class=\"code\">|</span> and <span class=\"code\">%</span> are literal, and (\"...\") indicates subsequent key-value pairs; or <span class=\"code\">empty</span> when empty. (Room names are case-sensitive, matching the game-internal naming.)  A room is added to the list when bombed, with a Boolean value of <span class=\"code\">false</span> before passing, or <span class=\"code\">true</span> after. By preloading this list, a customized \"all but these tolls\" challenge could be crafted (but, do note the list does not show in-game!)." + getMapLink(v[1].toUpperCase(), _board),
 			paint: p,
 			toBin: new Uint8Array(b)
 		};
@@ -1558,7 +1558,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoDepthsChallenge: function(desc) {
+	BingoDepthsChallenge: function(desc, _board) {
 		const thisname = "BingoDepthsChallenge";
 		//	desc of format ["System.String|VultureGrub|Creature Type|0|depths", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
@@ -1582,7 +1582,7 @@ export const CHALLENGES = {
 			items: [items[2]],
 			values: [items[1]],
 			description: "Drop " + d + " into the Depths drop room (SB_D06).",
-			comments: "Player, and creature of target type, must be in the room at the same time, and the creature's position must be below the drop." + getMapLink("SB_D06"),
+			comments: "Player, and creature of target type, must be in the room at the same time, and the creature's position must be below the drop." + getMapLink("SB_D06", _board),
 			paint: [
 				{ type: "icon", value: iconName, scale: 1, color: iconColor, rotation: 0 },
 				{ type: "icon", value: "deathpiticon", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
@@ -2275,7 +2275,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoPearlDeliveryChallenge: function(desc) {
+	BingoPearlDeliveryChallenge: function(desc, _board) {
 		const thisname = "BingoPearlDeliveryChallenge";
 		//	desc of format ["System.String|LF|Pearl from Region|0|regions", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
@@ -2285,7 +2285,7 @@ export const CHALLENGES = {
 		if (r === "")
 			throw new TypeError(thisname + ": error, region \"" + items[1] + "\" not found in regionCodeToDisplayName[]");
 		var oracle = "moon";
-		if (board.character === "Artificer")
+		if (_board.character === "Artificer")
 			oracle = "pebbles";
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
@@ -2811,7 +2811,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoVistaChallenge: function(desc) {
+	BingoVistaChallenge: function(desc, _board) {
 		const thisname = "BingoVistaChallenge";
 		//	desc of format ["CC", "System.String|CC_A10|Room|0|vista", "734", "506", "0", "0"]
 		checkDescriptors(thisname, desc.length, 6, "parameter item count");
@@ -2852,7 +2852,7 @@ export const CHALLENGES = {
 			items: ["Region"],
 			values: [desc[0]],
 			description: "Reach the vista point in " + v + ".",
-			comments: "Room: " + items[1] + " at x: " + String(roomX) + ", y: " + String(roomY) + "; is a " + ((idx >= 0) ? "stock" : "customized") + " location." + getMapLink(items[1]) + "<br>Note: the room names for certain Vista Points in Spearmaster/Artificer Garbage Wastes, and Rivulet Underhang, are not generated correctly for their world state, and so may not show correctly on the map; the analogous rooms are however fixed up in-game.",
+			comments: "Room: " + items[1] + " at x: " + String(roomX) + ", y: " + String(roomY) + "; is a " + ((idx >= 0) ? "stock" : "customized") + " location." + getMapLink(items[1], _board) + "<br>Note: the room names for certain Vista Points in Spearmaster/Artificer Garbage Wastes, and Rivulet Underhang, are not generated correctly for their world state, and so may not show correctly on the map; the analogous rooms are however fixed up in-game.",
 			paint: [
 				{ type: "icon", value: "vistaicon", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
@@ -2861,8 +2861,8 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoVistaExChallenge: function(desc) {
-		return CHALLENGES.BingoVistaChallenge(desc);
+	BingoVistaExChallenge: function(desc, _board) {
+		return CHALLENGES.BingoVistaChallenge(desc, _board);
 	},
 	//	Challenges are alphabetical up to here (initial version); new challenges/variants added chronologically below
 	//	added 0.86 (in 0.90 update cycle)
@@ -2971,8 +2971,8 @@ export const CHALLENGES = {
 		return CHALLENGES.BingoTameChallenge(desc);
 	},
 	/*	added 1.2 */
-	BingoBombTollExChallenge: function(desc) {
-		return CHALLENGES.BingoBombTollChallenge(desc);
+	BingoBombTollExChallenge: function(desc, _board) {
+		return CHALLENGES.BingoBombTollChallenge(desc, _board);
 	},
 	BingoDodgeNootChallenge: function(desc) {
 		const thisname = "BingoDodgeNootChallenge";
@@ -5558,12 +5558,12 @@ function checkDescriptors(t, d, g, err) {
  *	Generate a valid? link to the RW map viewer, of the specified room,
  *	and current global state (board.character, map_link_base).
  */
-function getMapLink(room) {
+function getMapLink(room, _board) {
 	if (map_link_base === "")
 		return "";
 	var reg = regionOfRoom(room);
 	var ch = Object.keys(BingoEnum_CharToDisplayText)[
-			Object.values(BingoEnum_CharToDisplayText).indexOf(board.character)] || "White";
+			Object.values(BingoEnum_CharToDisplayText).indexOf(_board.character)] || "White";
 	ch = ch.toLowerCase();
 	return "<br><a href=\"" + map_link_base + "?slugcat=" + ch + "&region=" + reg + "&room=" + room
 			+ "\" target=\"_blank\">" + room + " on Rain World Downpour Map" + "</a>";
