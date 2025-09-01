@@ -3634,35 +3634,35 @@ const BingoEnum_BombableOutposts = [
 const BingoEnum_BombedDict = [
 	"empty",	//	default
 	//	false's
-	"SU_C02|false",	//	base list
-	"GW_C05|false",
-	"GW_C11|false",
-	"LF_E03|false",
-	"UG_TOLL|false",
-	"CL_A34|false",	//	customization-proofing
-	"CL_B27|false",
-	"LC_C10|false",
-	"LC_longslum|false",
-	"LC_templetoll|false",
-	"LC_stripmallNEW|false",
-	"LF_J01|false",
-	"OE_TOWER04|false",
-	"SB_TOPSIDE|false",
+	"SU_C02|False",	//	base list
+	"GW_C05|False",
+	"GW_C11|False",
+	"LF_E03|False",
+	"UG_TOLL|False",
+	"CL_A34|False",	//	customization-proofing
+	"CL_B27|False",
+	"LC_C10|False",
+	"LC_longslum|False",
+	"LC_templetoll|False",
+	"LC_stripmallNEW|False",
+	"LF_J01|False",
+	"OE_TOWER04|False",
+	"SB_TOPSIDE|False",
 	//	true's
-	"SU_C02|true",
-	"GW_C05|true",
-	"GW_C11|true",
-	"LF_E03|true",
-	"UG_TOLL|true",
-	"CL_A34|true",
-	"CL_B27|true",
-	"LC_C10|true",
-	"LC_longslum|true",
-	"LC_templetoll|true",
-	"LC_stripmallNEW|true",
-	"LF_J01|true",
-	"OE_TOWER04|true",
-	"SB_TOPSIDE|true"
+	"SU_C02|True",
+	"GW_C05|True",
+	"GW_C11|True",
+	"LF_E03|True",
+	"UG_TOLL|True",
+	"CL_A34|True",
+	"CL_B27|True",
+	"LC_C10|True",
+	"LC_longslum|True",
+	"LC_templetoll|True",
+	"LC_stripmallNEW|True",
+	"LF_J01|True",
+	"OE_TOWER04|True",
+	"SB_TOPSIDE|True"
 ];
 
 /**
