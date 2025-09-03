@@ -1248,12 +1248,13 @@ export const CHALLENGES = {
 			else
 				d = "Throw grenades at " + String(amt) + " Scavenger tolls";
 			d += ((v[2] === "true") ? ", then pass them." : ".");
+			var am = parseInt(desc[3]);
 		}
 		var p = [
 			{ type: "icon", value: "Symbol_StunBomb", scale: 1, color: colorFloatToString(itemNameToIconColorMap["ScavengerBomb"]), rotation: 0 },
 			{ type: "icon", value: "scavtoll", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 			{ type: "break" },
-			{ type: "text", value: (v[0] === "false") ? ("[0/" + String(amt) + "]") : v[1].toUpperCase(), color: colorFloatToString(RainWorldColors.Unity_white) }
+			{ type: "text", value: (v[0] === "false") ? ("[" + String(am) + "/" + String(amt) + "]") : v[1].toUpperCase(), color: colorFloatToString(RainWorldColors.Unity_white) }
 		];
 		if (v[2] === "true")
 			p.splice(2, 0, { type: "icon", value: "singlearrow", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
@@ -1304,7 +1305,7 @@ export const CHALLENGES = {
 		if (dataPearlToDisplayTextMap[items[1]] === undefined)
 			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in dataPearlToDisplayTextMap[]");
 		var amounts = checkSettingbox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "amount selection");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var p, d;
@@ -1330,14 +1331,14 @@ export const CHALLENGES = {
 				{ type: "break" },
 				{ type: "icon", value: "Symbol_Pearl", scale: 1, color: colorFloatToString(dataPearlToColorMap[items[1]]), rotation: 0, background: { type: "icon", value: "radialgradient", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } },
 				{ type: "break" },
-				{ type: "text", value: "[0/1]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/1]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			];
 		} else {
 			d = "Collect " + creatureNameQuantify(amt, "colored pearls") + ".";
 			p = [
 				{ type: "icon", value: "pearlhoard_color", scale: 1, color: colorFloatToString(itemNameToIconColorMap["Pearl"]), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			];
 		}
 		var b = Array(6); b.fill(0);
@@ -1369,7 +1370,7 @@ export const CHALLENGES = {
 		if (d === undefined)
 			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in creature- or itemNameToDisplayTextMap[]");
 		var amounts = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "amount selection");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var iconName = creatureNameToIconAtlasMap[items[1]] || itemNameToIconAtlasMap[items[1]];
@@ -1390,7 +1391,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "crafticon", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: iconName, scale: 1, color: iconColor, rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -1404,7 +1405,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in BingoEnum_Transportable[]");
 		}
 		var amounts = checkSettingbox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "amount selection");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		if (creatureNameToDisplayTextMap[items[1]] === undefined)
@@ -1426,7 +1427,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "singlearrow", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: "ShortcutGate", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -1436,7 +1437,7 @@ export const CHALLENGES = {
 		//	desc of format ["System.Int32|126|Target Score|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
 		var items = checkSettingbox(thisname, desc[0], ["System.Int32", , "Target Score", , "NULL"], "score goal");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]); // Real-time amount not tracked in board string
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -1479,7 +1480,7 @@ export const CHALLENGES = {
 		items = checkSettingbox(thisname, desc[4], ["System.Boolean", , "In One Cycle", , "NULL"], "one-cycle flag"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingbox(thisname, desc[5], ["System.String", , "Region", , "regions"], "region selection"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingbox(thisname, desc[6], ["System.String", , "Subregion", , "subregions"], "subregion selection"); v.push(items[1]); i.push(items[2]);
-		var amt = parseInt(v[2]);
+		var amt = parseInt(v[2]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + v[2] + "\" not a number or out of range");
 		if (!BingoEnum_Weapons.includes(v[0]))
@@ -1525,7 +1526,7 @@ export const CHALLENGES = {
 		var d = "Hit ";
 		p.push( { type: "break" } );
 		d += (creatureNameToDisplayTextMap[v[1]] || v[1]) + " with ";
-		p.push( { type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+		p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		if (v[3] === "true")
 			p.push( { type: "icon", value: "cycle_limit", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
 		d += itemNameToDisplayTextMap[v[0]] || v[0];
@@ -1654,7 +1655,7 @@ export const CHALLENGES = {
 		}
 		checkDescriptors(thisname, desc.length, 7, "parameter item count");
 		var amounts = checkSettingbox(thisname, desc[0], ["System.Int32", , "Amount", , "NULL"], "eat amount");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var isCrit = parseInt(desc[2]);
@@ -1674,7 +1675,7 @@ export const CHALLENGES = {
 			{ type: "icon", value: "foodSymbol", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 			{ type: "icon", value: iconName, scale: 1, color: iconColor, rotation: 0 },
 			{ type: "break" },
-			{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+			{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 		];
 		if (starv[1] === "true")
 			p.splice(2, 0, { type: "break" }, { type: "icon", value: "Multiplayer_Death", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
@@ -1717,6 +1718,8 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": error, starving flag \"" + starv[1] + "\" not 'true' or 'false'");
 		var amount = checkSettingbox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "echo amount");
 		var amt = parseInt(amount[1]);
+		if (speci[1] === "false")
+			var am = parseInt(desc[3]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + amount[1] + "\" not a number or out of range");
@@ -1730,7 +1733,7 @@ export const CHALLENGES = {
 		}
 		var p = [
 			{ type: "icon", value: "echo_icon", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
-			{ type: "text", value: ((speci[1] === "true") ? echor[1] : "[0/" + amt + "]"), color: colorFloatToString(RainWorldColors.Unity_white) }
+			{ type: "text", value: ((speci[1] === "true") ? echor[1] : "[" + String(am) + "/" + amt + "]"), color: colorFloatToString(RainWorldColors.Unity_white) }
 		];
 		if (starv[1] === "true") {
 			p.push( { type: "break" } );
@@ -1790,7 +1793,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|271|Target Score|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Target Score", , "NULL"], "score goal");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -1807,7 +1810,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "Multiplayer_Star", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -1847,7 +1850,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|3|Amount|1|NULL", "System.Boolean|true|At Once|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 5, "parameter item count");
 		var amounts = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "egg count");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[0]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
@@ -1858,7 +1861,7 @@ export const CHALLENGES = {
 			{ type: "icon", value: itemNameToIconAtlasMap["NeedleEgg"], scale: 1, color: colorFloatToString(itemNameToIconColorMap["NeedleEgg"]), rotation: 0 },
 			{ type: "icon", value: creatureNameToIconAtlasMap["SmallNeedleWorm"], scale: 1, color: creatureToColor("SmallNeedleWorm"), rotation: 0 },
 			{ type: "break" },
-			{ type: "text", value: "[0/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) },
 		];
 		if (items[1] === "true")
 			p.splice(2, 0, { type: "icon", value: "cycle_limit", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
@@ -1883,7 +1886,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|2|Amount|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "goal count");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
@@ -1900,7 +1903,7 @@ export const CHALLENGES = {
 			comments: "",
 			paint: [
 				{ type: "icon", value: "completechallenge", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
-				{ type: "text", value: "[0/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) },
+				{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) },
 				{ type: "break" },
 				{ type: "icon", value: "buttonCrossA", scale: 1, color: colorFloatToString(RainWorldColors.Unity_red), rotation: 0 },
 				{ type: "icon", value: "Multiplayer_Death", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 }
@@ -1930,7 +1933,7 @@ export const CHALLENGES = {
 		var reg = checkSettingbox(thisname, desc[4], ["System.String", , "Region", , "regions"], "region");
 		if (!BingoEnum_expobject.includes(items[1]))
 			throw new TypeError(thisname + ": error, item selection \"" + items[1] + "\" not found in BingoEnum_expobject[]");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
@@ -1964,7 +1967,7 @@ export const CHALLENGES = {
 			p.unshift( { type: "icon", value: "ShelterMarker", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
 		}
 		p.push( { type: "break" },
-				{ type: "text", value: "[0/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+				{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		if (reg[1] !== "Any Region") {
 			p.splice(p.length - 2, 0, { type: "break" }, { type: "text", value: reg[1], color: colorFloatToString(RainWorldColors.Unity_white) } );
 		}
@@ -1995,7 +1998,7 @@ export const CHALLENGES = {
 		//	assert: desc of format ["0", "System.Int32|5|Amount|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "item count");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2013,7 +2016,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "foodSymbol", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: "FlowerMarker", scale: 1, color: colorFloatToString(RainWorldColors.SaturatedGold), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + items[1] + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2042,7 +2045,7 @@ export const CHALLENGES = {
 		items = checkSettingbox(thisname, desc[8], ["System.Boolean", , "While Starving", , "NULL"], "starving flag"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingbox(thisname, desc[9], ["System.Boolean", , "While under mushroom effect", , "NULL"], "mushroom flag"); v.push(items[1]); i.push(items[2]);
 		var r = "";
-		var amt = parseInt(v[2]);
+		var amt = parseInt(v[2]), am = parseInt(desc[3]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + v[2] + "\" not a number or out of range");
 		var c = String(amt) + " creatures";
@@ -2104,7 +2107,7 @@ export const CHALLENGES = {
 			p.push( { type: "text", value: v[4], color: colorFloatToString(RainWorldColors.Unity_white) } );
 			p.push( { type: "break" } );
 		}
-		p.push( { type: "text", value: "[0/" + v[2] + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+		p.push( { type: "text", value: "[" + String(am) + "/" + v[2] + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		if (v[7] === "true")
 			p.push( { type: "icon", value: "Multiplayer_Death", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 } );
 		if (v[5] === "true")
@@ -2145,7 +2148,7 @@ export const CHALLENGES = {
 		//	desc of format "0", "System.Int32|4|Amount|0|NULL", "0", "0", ""
 		checkDescriptors(thisname, desc.length, 5, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "maul amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > ALL_ENUMS["creatures"].length)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(4); b.fill(0);
@@ -2162,7 +2165,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "artimaulcrit", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2172,7 +2175,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|13|Amount|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "maul amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2189,7 +2192,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "artimaul", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2199,7 +2202,7 @@ export const CHALLENGES = {
 		//	desc of format ["System.Int32|2|Amount of Neurons|0|NULL", "0", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[0], ["System.Int32", , "Amount of Neurons", , "NULL"], "neuron amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var oracle = "moon";
@@ -2219,7 +2222,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "singlearrow", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: iteratorNameToIconAtlasMap[oracle], scale: 1, color: colorFloatToString(iteratorNameToIconColorMap[oracle]), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2329,7 +2332,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": error, common pearls flag \"" + common[1] + "\" not 'true' or 'false'");
 		if (any[1] !== "true" && any[1] !== "false")
 			throw new TypeError(thisname + ": error, any shelter flag \"" + any[1] + "\" not 'true' or 'false'");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
 		var r = ".";
@@ -2357,7 +2360,7 @@ export const CHALLENGES = {
 			p.push( { type: "break" },
 					{ type: "text", value: reg[1], color: colorFloatToString(RainWorldColors.Unity_white) } );
 		p.push( { type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		var b = Array(6); b.fill(0);
 		b[0] = challengeValue(thisname);
 		applyBool(b, 1, 4, common[1]);
@@ -2386,7 +2389,7 @@ export const CHALLENGES = {
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "pin amount"); v.push(items[1]); i.push(items[2]);
 		var items = checkSettingbox(thisname, desc[2], ["System.String", , "Creature Type", , "creatures"], "creature type"); v.push(items[1]); i.push(items[2]);
 		var items = checkSettingbox(thisname, desc[4], ["System.String", , "Region", , "regions"], "region selection"); v.push(items[1]); i.push(items[2]);
-		var amt = parseInt(v[0]);
+		var amt = parseInt(v[0]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + v[0] + "\" not a number or out of range");
 		var c = "creatures";
@@ -2415,7 +2418,7 @@ export const CHALLENGES = {
 			p.push( { type: "text", value: v[2], color: colorFloatToString(RainWorldColors.Unity_white) } );
 		}
 		p.push( { type: "break" } );
-		p.push( { type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+		p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		var b = Array(7); b.fill(0);
 		b[0] = challengeValue(thisname);
 		applyShort(b, 3, amt);
@@ -2438,7 +2441,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|6|Amount|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "pop amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2456,7 +2459,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "Symbol_Spear", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: "popcorn_plant", scale: 1, color: colorFloatToString(RainWorldColors["popcorn_plant"]), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2510,7 +2513,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|7|Amount|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "seed amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2528,7 +2531,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "foodSymbol", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: "Symbol_Seed", scale: 1, color: colorFloatToString(itemNameToIconColorMap["Default"]), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2548,7 +2551,7 @@ export const CHALLENGES = {
 		items = checkSettingbox(thisname, desc[1], ["System.Boolean", , "From Scavenger Toll", , "NULL"], "venue flag"); v.push(items[1]); i.push(items[2]);
 		if (itemNameToDisplayTextMap[v[0]] === undefined)
 			throw new TypeError(thisname + ": error, item selection \"" + v[2] + "\" not found in itemNameToDisplayTextMap[]");
-		var amt = parseInt(v[1]);
+		var amt = parseInt(v[1]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + v[1] + "\" not a number or out of range");
 		var d = "Steal " + String(amt) + " " + itemNameToDisplayTextMap[v[0]] + " from ";
@@ -2565,7 +2568,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": error, venue flag \"" + v[2] + "\" not 'true' or 'false'");
 		}
 		p.push( { type: "break" } );
-		p.push( { type: "text", value: "[0/" + v[1] + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+		p.push( { type: "text", value: "[" + String(am) + "/" + v[1] + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		var b = Array(6); b.fill(0);
 		b[0] = challengeValue(thisname);
 		b[3] = enumToValue(v[0], "theft");
@@ -2598,7 +2601,7 @@ export const CHALLENGES = {
 		var items = checkSettingbox(thisname, desc[0], ["System.Boolean", , "Specific Creature Type", , "NULL"], "creature type flag"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingbox(thisname, desc[1], ["System.String", , "Creature Type", , "friend"], "friend selection"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingbox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "friend count"); v.push(items[1]); i.push(items[2]);
-		var amt = parseInt(v[2]);
+		var amt = parseInt(v[2]), am = parseInt(desc[2]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + v[2] + "\" not a number or out of range");
@@ -2612,7 +2615,7 @@ export const CHALLENGES = {
 			p.push( { type: "icon", value: creatureNameToIconAtlasMap[v[1]], scale: 1, color: creatureToColor(v[1]), rotation: 0 } );
 		} else if (v[0] === "false") {
 			p.push( { type: "break" } );
-			p.push( { type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
+			p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) } );
 		} else {
 			throw new TypeError(thisname + ": error, specific creature flag \"" + v[0] + "\" not 'true' or 'false'");
 		}
@@ -2643,7 +2646,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|15|Value|0|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Value", , "NULL"], "points value");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2660,7 +2663,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "scav_merchant", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2670,7 +2673,7 @@ export const CHALLENGES = {
 		//	desc of format ["0", "System.Int32|3|Amount of Items|0|NULL", "empty", "0", "0"]
 		checkDescriptors(thisname, desc.length, 5, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount of Items", , "NULL"], "amount of items");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2689,7 +2692,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "Menu_Symbol_Shuffle", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "icon", value: "scav_merchant", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2980,7 +2983,7 @@ export const CHALLENGES = {
 		//	amount, current, completed, revealed
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
 		var items = checkSettingbox(thisname, desc[0], ["System.Int32", , "Amount", , "NULL"], "amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
 		var b = Array(5); b.fill(0);
@@ -2998,7 +3001,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: creatureNameToIconAtlasMap["BigNeedleWorm"], scale: 1, color: colorFloatToString(creatureNameToIconColorMap["BigNeedleWorm"]), rotation: 0 },
 				{ type: "icon", value: "slugtarget", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -3045,7 +3048,7 @@ export const CHALLENGES = {
 		//	current, amount, completed, revealed, crushed
 		checkDescriptors(thisname, desc.length, 5, "parameter item count");
 		var items = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "amount");
-		var amt = parseInt(items[1]);
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + items[1] + "\" not a number or out of range");
@@ -3063,7 +3066,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "gourmcrush", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -3103,7 +3106,7 @@ export const CHALLENGES = {
 		//	current, amount, completed, revealed, lickers
 		checkDescriptors(thisname, desc.length, 5, "parameter item count");
 		var amounts = checkSettingbox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "amount");
-		var amt = parseInt(amounts[1]);
+		var amt = parseInt(amounts[1]), am = parseInt(desc[0]);
 		amt = Math.min(amt, CHAR_MAX);
 		if (isNaN(amt) || amt < 1)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
@@ -3121,7 +3124,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "lizlick", scale: 1, color: colorFloatToString(RainWorldColors.Unity_white), rotation: 0 },
 				{ type: "break" },
-				{ type: "text", value: "[0/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
+				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -3240,7 +3243,8 @@ const BingoEnum_Bannable = [
 	//	More foods added v1.2
 	"SSOracleSwarmer",
 	"KarmaFlower",
-	"FireEgg"
+	"FireEgg",
+	"DataPearl"
 ];
 
 /**
