@@ -2325,7 +2325,7 @@ export const CHALLENGES = {
 		var common = checkSettingbox(thisname, desc[0], ["System.Boolean", , "Common Pearls", , "NULL"], "common pearls flag");
 		var any = checkSettingbox(thisname, desc[1], ["System.Boolean", , "Any Shelter", , "NULL"], "any shelter flag");
 		var amounts = checkSettingbox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "pearl count");
-		desc[4] = desc[4].replace(/"regionsreal"/, "\"regions\"");	//	both acceptable (v0.85/0.90)
+		desc[4] = desc[4].replace(/regionsreal/, "regions");	//	both acceptable (v0.85/0.90)
 		desc[4] = desc[4].replace(/\|In Region\|/, "|Region|");	//	parameter name updated v1.25
 		var reg = checkSettingbox(thisname, desc[4], ["System.String", , "Region", , "regions"], "region selection");
 		if (common[1] !== "true" && common[1] !== "false")
