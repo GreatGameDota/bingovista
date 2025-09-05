@@ -3592,7 +3592,8 @@ const BingoEnum_Transportable = [
 	"VultureGrub",
 	"CicadaA",
 	"CicadaB",
-	"Yeek"
+	"Yeek",
+	"TubeWorm"
 ];
 
 /**
