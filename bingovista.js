@@ -3198,7 +3198,9 @@ const BingoEnum_Weapons = [
 	"ScavengerBomb",
 	"JellyFish",
 	"PuffBall",
-	"LillyPuck"
+	"LillyPuck",
+	"SingularityBomb",
+	"FireEgg"
 ];
 
 /**
