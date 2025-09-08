@@ -733,8 +733,8 @@ function setCursor(row, col) {
 	var curSty = document.getElementById("cursor").style;
 	curSty.width  = String(square.width  + square.border - 4) + "px";
 	curSty.height = String(square.height + square.border - 4) + "px";
-	curSty.left = String(square.margin / 2 - 0 + col * (square.width + square.margin + square.border)) + "px";
-	curSty.top  = String(square.margin / 2 - 0 + row * (square.height + square.margin + square.border)) + "px";
+	curSty.left = String(square.margin / 2 - 1 + col * (square.width + square.margin + square.border)) + "px";
+	curSty.top  = String(square.margin / 2 - 1 + row * (square.height + square.margin + square.border)) + "px";
 	if (transpose) {
 		var t = curSty.top; curSty.top = curSty.left; curSty.left = t;
 	}
@@ -748,15 +748,7 @@ export function drawSquare(ctx, goal, x, y, size) {
 	ctx.beginPath();
 	ctx.strokeStyle = size.color;
 	ctx.lineWidth = size.border;
-	ctx.lineCap = "butt";
-	ctx.moveTo(x, y);
-	ctx.lineTo(x + size.width, y);
-	ctx.moveTo(x + size.width, y);
-	ctx.lineTo(x + size.width, y + size.height);
-	ctx.moveTo(x + size.width, y + size.height);
-	ctx.lineTo(x, y + size.height);
-	ctx.moveTo(x, y + size.height);
-	ctx.lineTo(x, y);
+	ctx.roundRect(x, y, size.width, size.height, 4);
 	ctx.stroke();
 	ctx.imageSmoothingEnabled = "false";
 	var lines = [], thisLine = [];
@@ -884,7 +876,7 @@ function boardToBin(b) {
 		gLen += b.goals[i].toBin.length;
 	}
 	gLen += hdr.length + comm.length + shelter.length + mods.length;
-	gLen = Math.ceil(gLen / 3) * 3;	//	round up to pad with zeroes; no effect on board, removes base64 padding
+	//gLen = Math.ceil(gLen / 3) * 3;	//	round up to pad with zeroes; no effect on board, removes base64 padding
 	var r = new Uint8Array(gLen);
 	var offs = 0;
 	r.set(hdr, offs); offs += hdr.length;
@@ -979,7 +971,7 @@ function binToString(a) {
 		try {
 			goal = binGoalToText(sa);
 		} catch (er) {
-			goal = "BingoChallenge~Error: " + er.message + "><";
+			goal = "BingoChallenge~Error: " + er.message + ", len " + sa.length + ", bytes [" + sa.join(",") + "]><";
 		}
 		ptr += GOAL_LENGTH + a[ptr + 2];
 		//	could also, at this point, enumerate goals in the data structure; need a direct binary to JS codec
@@ -1308,7 +1300,7 @@ export const CHALLENGES = {
 		var amt = parseInt(amounts[1]), am = parseInt(desc[2]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
-		var p, d;
+		var d, p;
 		if (speci[1] === "true") {
 			var r;
 			if (items[1] === "MS")
@@ -2897,9 +2889,7 @@ export const CHALLENGES = {
 			comments: "",
 			paint: [
 				{ type: "text", value: items[1], color: colorFloatToString(RainWorldColors.Unity_white) },
-				{ type: "break" },
-				{ type: "icon", value: "keyShiftA", scale: 1, color: colorFloatToString(RainWorldColors.EnterFrom), rotation: 180 },
-				{ type: "break" },
+				{ type: "icon", value: "keyShiftA", scale: 1, color: colorFloatToString(RainWorldColors.EnterFrom), rotation: 90 },
 				{ type: "text", value: itemTo[1], color: colorFloatToString(RainWorldColors.Unity_white) }
 			],
 			toBin: new Uint8Array(b)
@@ -5425,8 +5415,8 @@ const ChallengeUpgrades = {
 function appendCHALLENGES() {
 	var exceptions = Object.keys(ChallengeUpgrades);
 	for (var g of BINARY_TO_STRING_DEFINITIONS) {
-		if (exceptions.indexOf(g) < 0)
-			BingoEnum_CHALLENGES.push(g.GoalName);
+		if (exceptions.indexOf(g.name) < 0)
+			BingoEnum_CHALLENGES.push(g.name);
 	}
 }
 
@@ -5435,11 +5425,11 @@ function appendCHALLENGES() {
  *	using these substitutions:
  *	'+' -> '-'
  *	'/' -> '_'
- *	'=' -> '*'
+ *	'=' -> ''
  */
 function binToBase64u(a) {
 	var s = btoa(String.fromCharCode.apply(null, a));
-	return s.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "*");
+	return s.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
 /**
@@ -5665,7 +5655,7 @@ function setMeta() {
 
 	if (board === undefined || document.getElementById("hdrttl") === null
 			|| document.getElementById("hdrchar") === null
-			|| document.getElementById("hdrshel").value === null) {
+			|| document.getElementById("hdrshel") === null) {
 		console.log("Need a board to set.");
 		return;
 	}
@@ -6012,8 +6002,7 @@ function generateRandomRandomGoals(n) {
  *	Generates one random example of each possible goal type.
  */
 function generateOneOfEverything() {
-	var s = "White;";
-	var goalNum;
+	var s = "White;", goalNum;
 	for (var i = 0; i < BINARY_TO_STRING_DEFINITIONS.length - GENERATE_BLACKLIST.length; i++) {
 		goalNum = i;
 		for (var j = 0; j < GENERATE_BLACKLIST.length; j++) {
