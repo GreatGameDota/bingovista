@@ -1052,21 +1052,30 @@ function binGoalToText(c) {
 			outputs = c.subarray(GOAL_LENGTH + c[p[j].offset + GOAL_LENGTH], maxIdx);
 		}
 
-		if (stringtype && p[j].formatter === "") {
-			//	Unformatted string, decode bytes into utf-8
-			replacer = d.decode(outputs);
-		} else if (!stringtype && p[j].formatter === "") {
-			//	single number, toString it
-			replacer = String(outputs[0]);
+		if (p[j].formatter === "") {
+			if (stringtype) {
+				//	Unformatted string, decode bytes into utf-8
+				replacer = d.decode(outputs);
+			} else {
+				//	single number, toString it
+				replacer = String(outputs[0]);
+			}
 		} else {
 			//	Formatted number/array, convert it and join
 			if (ALL_ENUMS[p[j].formatter] === undefined)
 				throw new TypeError("binGoalToText: formatter \"" + p[j].formatter + "\" not found");
 			tmp = [];
 			for (k = 0; k < outputs.length; k++) {
-				if (ALL_ENUMS[p[j].formatter][outputs[k] - 1] === undefined)
-					throw new TypeError("binGoalToText: formatter \"" + p[j].formatter + "\", value out of range: " + String(outputs[k]));
-				tmp.push(ALL_ENUMS[p[j].formatter][outputs[k] - 1]);
+				var f = p[j].formatter;
+				if (p[j].altthreshold === undefined || outputs[k] < p[j].altthreshold) {
+					if (ALL_ENUMS[p[j].formatter][outputs[k] - 1] === undefined)
+						throw new TypeError("binGoalToText: formatter \"" + p[j].formatter + "\", value out of range: " + String(outputs[k]));
+					tmp.push(ALL_ENUMS[p[j].formatter][outputs[k] - 1]);
+				} else {
+					if (ALL_ENUMS[p[j].altformatter][outputs[k] - p[j].altthreshold] === undefined)
+						throw new TypeError("binGoalToText: alternative formatter \"" + p[j].altformatter + "\", value out of range: " + String(outputs[k]));
+					tmp.push(ALL_ENUMS[p[j].altformatter][outputs[k] - p[j].altthreshold]);
+				}
 			}
 			replacer = tmp.join(p[j].joiner || "");
 		}
@@ -1393,18 +1402,18 @@ export const CHALLENGES = {
 		//	desc of format ["System.String|CicadaA|Creature Type|1|transport", "0", "System.Int32|4|Amount|0|NULL", "empty", "0", "0"]
 		checkDescriptors(thisname, desc.length, 6, "parameter item count");
 		var items = checkSettingbox(thisname, desc[0], ["System.String", , "Creature Type", , "transport"], "creature selection");
-		if (!BingoEnum_Transportable.includes(items[1])) {
-			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in BingoEnum_Transportable[]");
-		}
+		if (creatureNameToDisplayTextMap[items[1]] === undefined)
+			throw new TypeError(thisname + ": error, creature type \"" + items[1] + "\" not found in creatureNameToDisplayTextMap[]");
 		var amounts = checkSettingbox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "amount selection");
 		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + amounts[1] + "\" not a number or out of range");
-		if (creatureNameToDisplayTextMap[items[1]] === undefined)
-			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in creature- or itemNameToDisplayTextMap[]");
 		var b = Array(5); b.fill(0);
 		b[0] = challengeValue(thisname);
-		b[3] = enumToValue(items[1], "transport");
+		if (BingoEnum_Transportable.includes(items[1]))
+			b[3] = enumToValue(items[1], "transport");
+		else
+			b[3] = enumToValue(items[1], "creatures") + BINARY_TO_STRING_DEFINITIONS[challengeValue(thisname)].params[0].altthreshold - 1;
 		b[4] = amt;
 		b[2] = b.length - GOAL_LENGTH;
 		return {
@@ -1556,9 +1565,6 @@ export const CHALLENGES = {
 		//	desc of format ["System.String|VultureGrub|Creature Type|0|depths", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
 		var items = checkSettingbox(thisname, desc[0], ["System.String", , "Creature Type", , "depths"], "creature selection");
-		if (!BingoEnum_Depthable.includes(items[1])) {
-			throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in BingoEnum_Depthable[]");
-		}
 		var iconName = creatureNameToIconAtlasMap[items[1]];
 		var iconColor = colorFloatToString(creatureNameToIconColorMap[items[1]] || creatureNameToIconColorMap["Default"]);
 		var d = creatureNameToDisplayTextMap[items[1]];
@@ -1567,7 +1573,10 @@ export const CHALLENGES = {
 		d = creatureNameQuantify(1, d);
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
-		b[3] = enumToValue(items[1], "depths");
+		if (BingoEnum_Transportable.includes(items[1]))
+			b[3] = enumToValue(items[1], "depths");
+		else
+			b[3] = enumToValue(items[1], "creatures") + BINARY_TO_STRING_DEFINITIONS[challengeValue(thisname)].params[0].altthreshold - 1;
 		b[2] = b.length - GOAL_LENGTH;
 		return {
 			name: thisname,
@@ -2712,8 +2721,6 @@ export const CHALLENGES = {
 		}
 		if (creatureNameToDisplayTextMap[v[2]] === undefined)
 			throw new TypeError(thisname + ": error, creature type \"" + v[2] + "\" not found in creatureNameToDisplayTextMap[]");
-		if (!BingoEnum_Transportable.includes(v[2]))
-			throw new TypeError(thisname + ": error, creature type \"" + v[2] + "\" not Transportable");
 		var p = [
 			{ type: "icon", value: creatureNameToIconAtlasMap[v[2]], scale: 1, color: creatureToColor(v[2]), rotation: 0 },
 			{ type: "break" }
@@ -2727,7 +2734,10 @@ export const CHALLENGES = {
 		b[0] = challengeValue(thisname);
 		b[3] = enumToValue(v[0], "regions");
 		b[4] = enumToValue(v[1], "regions");
-		b[5] = enumToValue(v[2], "transport");
+		if (BingoEnum_Transportable.includes(v[2]))
+			b[5] = enumToValue(v[2], "transport");
+		else
+			b[5] = enumToValue(v[2], "creatures") + BINARY_TO_STRING_DEFINITIONS[challengeValue(thisname)].params[2].altthreshold - 1;
 		b[2] = b.length - GOAL_LENGTH;
 		return {
 			name: thisname,
@@ -3157,7 +3167,22 @@ const BingoEnum_theft = [
 	"Lantern",
 	"GooieDuck",
 	"GlowWeed",
-	"DataPearl"	//	added by GetCorrectListForChallenge()
+	"DataPearl",	//	added by GetCorrectListForChallenge()
+	//	ScavengerAI::CollectScore (nonzero values)
+	"ExplosiveSpear",
+	"ElectricSpear",
+	"PuffBall",
+	"FlareBomb",
+	"KarmaFlower",
+	"Mushroom",
+	"VultureMask",
+	"OverseerCarcass",
+	"FirecrackerPlant",
+	"JellyFish",
+	"FlyLure",
+	"SporePlant",
+	"LillyPuck",
+	"SingularityBomb"
 ];
 
 /**
@@ -3181,7 +3206,44 @@ const BingoEnum_expobject = [
 	"EggBugEgg",
 	"GooieDuck",
 	"LillyPuck",
-	"DandelionPeach"
+	"DandelionPeach",
+	//	1.25: adding every possible type that can proc (hopefully?)
+	//	AbstractPhysicalObject.AbstractObjectType
+	"Creature",
+	"Rock",
+	"Spear",
+	"Oracle",
+	"PebblesPearl",
+	"SLOracleSwarmer",
+	"SSOracleSwarmer",
+	"DataPearl",
+	"SeedCob",
+	"WaterNut",
+	"KarmaFlower",
+	"VoidSpawn",
+	"AttachedBee",
+	"NeedleEgg",
+	"DartMaggot",
+	"NSHSwarmer",
+	"OverseerCarcass",
+	"CollisionField",
+	"BlinkingFlower",
+	"Pomegranate",
+	"LobeTree",
+	//	MoreSlugcatsEnums.AbstractObjectType
+	"JokeRifle",
+	"Bullet",
+	"Spearmasterpearl",
+	"FireEgg",
+	"EnergyCell",
+	"Germinator",
+	"MoonCloak",
+	"HalcyonPearl",
+	"HRGuard",
+	"Seed",
+	"GlowWeed",
+	//	DLCSharedEnums.AbstractObjectType
+	"SingularityBomb"
 ];
 
 /**
@@ -3236,8 +3298,42 @@ const BingoEnum_Bannable = [
 	"SSOracleSwarmer",
 	"KarmaFlower",
 	"FireEgg",
-	"DataPearl"
+	"DataPearl",
+	//	1.25: adding every possible type that can proc (hopefully?)
+	"SporePlant",
+	"FlareBomb",
+	"FlyLure",
+	//	AbstractPhysicalObject.AbstractObjectType
+	"Creature",
+	"Spear",
+	"Oracle",
+	"PebblesPearl",
+	"SLOracleSwarmer",
+	"SeedCob",
+	"VoidSpawn",
+	"AttachedBee",
+	"NeedleEgg",
+	"DartMaggot",
+	"NSHSwarmer",
+	"OverseerCarcass",
+	"CollisionField",
+	"BlinkingFlower",
+	"Pomegranate",
+	"LobeTree",
+	//	MoreSlugcatsEnums.AbstractObjectType
+	"JokeRifle",
+	"Bullet",
+	"Spearmasterpearl",
+	"EnergyCell",
+	"Germinator",
+	"MoonCloak",
+	"HalcyonPearl",
+	"HRGuard",
+	"Seed",
+	//	DLCSharedEnums.AbstractObjectType
+	"SingularityBomb"
 ];
+
 
 /**
  *	Tame-able creatures; used by BingoTameChallenge
@@ -3619,7 +3715,17 @@ const BingoEnum_BombableOutposts = [
 	"gw_c05",
 	"gw_c11",
 	"lf_e03",
-	"ug_toll"
+	"ug_toll",
+	"cl_a34",	//	customization-proofing
+	"cl_b27",
+	"lc_c10",
+	"lc_longslum",
+	"LC_rooftophop",
+	"lc_templetoll",
+	"lc_stripmallnew",
+	"lf_j01",
+	"oe_tower04",
+	"sb_topside",
 ];
 
 /**
@@ -3631,35 +3737,37 @@ const BingoEnum_BombableOutposts = [
 const BingoEnum_BombedDict = [
 	"empty",	//	default
 	//	false's
-	"SU_C02|False",	//	base list
-	"GW_C05|False",
-	"GW_C11|False",
-	"LF_E03|False",
-	"UG_TOLL|False",
-	"CL_A34|False",	//	customization-proofing
-	"CL_B27|False",
-	"LC_C10|False",
-	"LC_longslum|False",
-	"LC_templetoll|False",
-	"LC_stripmallNEW|False",
-	"LF_J01|False",
-	"OE_TOWER04|False",
-	"SB_TOPSIDE|False",
+	"SU_C02|false",	//	base list
+	"GW_C05|false",
+	"GW_C11|false",
+	"LF_E03|false",
+	"UG_TOLL|false",
+	"CL_A34|false",	//	customization-proofing
+	"CL_B27|false",
+	"LC_C10|false",
+	"LC_longslum|false",
+	"LC_rooftophop|false",
+	"LC_templetoll|false",
+	"LC_stripmallNEW|false",
+	"LF_J01|false",
+	"OE_TOWER04|false",
+	"SB_TOPSIDE|false",
 	//	true's
-	"SU_C02|True",
-	"GW_C05|True",
-	"GW_C11|True",
-	"LF_E03|True",
-	"UG_TOLL|True",
-	"CL_A34|True",
-	"CL_B27|True",
-	"LC_C10|True",
-	"LC_longslum|True",
-	"LC_templetoll|True",
-	"LC_stripmallNEW|True",
-	"LF_J01|True",
-	"OE_TOWER04|True",
-	"SB_TOPSIDE|True"
+	"SU_C02|true",
+	"GW_C05|true",
+	"GW_C11|true",
+	"LF_E03|true",
+	"UG_TOLL|true",
+	"CL_A34|true",
+	"CL_B27|true",
+	"LC_C10|true",
+	"LC_longslum|true",
+	"LC_rooftophop|true",
+	"LC_templetoll|true",
+	"LC_stripmallNEW|true",
+	"LF_J01|true",
+	"OE_TOWER04|true",
+	"SB_TOPSIDE|true"
 ];
 
 /**
@@ -4931,6 +5039,10 @@ const ALL_ENUMS = {
  *	or a boolean into "false" and "true".  number and bool are scalar so of course don't
  *	have anything to join; `joiner` is unread on those types.
  *
+ *	Alternative formatters are possible by specifying altthreshold, a numeric threshold
+ *	at which the alternative will be chosen, and altformatter, the name of the alternative
+ *	enum.
+ *
  *	Special note: because zero may be used for string terminator, and because enums may be
  *	used for both string (array) and scalar (number) data, the actual enum index written is
  *	someEnumArray.indexOf("someString") + 1 for both data types.  Enums with a default or
@@ -4995,7 +5107,7 @@ const BINARY_TO_STRING_DEFINITIONS = [
 	{
 		name: "BingoCreatureGateChallenge",
 		params: [
-			{ type: "number", offset: 0, size: 1, formatter: "transport" },	//	0: Creature choice
+			{ type: "number", offset: 0, size: 1, formatter: "transport", altthreshold: 64, altformatter: "creatures" },	//	0: Creature choice
 			{ type: "number", offset: 1, size: 1, formatter: "" } 	//	1: Gate amount
 		],
 		desc: "System.String|{0}|Creature Type|1|transport><0><System.Int32|{1}|Amount|0|NULL><empty><0><0"
@@ -5019,7 +5131,7 @@ const BINARY_TO_STRING_DEFINITIONS = [
 	{
 		name: "BingoDepthsChallenge",
 		params: [
-			{ type: "number", offset: 0, size: 1, formatter: "depths" }	//	0: Creature choice
+			{ type: "number", offset: 0, size: 1, formatter: "depths", altthreshold: 64, altformatter: "creatures" }	//	0: Creature choice
 		],
 		desc: "System.String|{0}|Creature Type|0|depths><0><0"
 	},
@@ -5243,7 +5355,7 @@ const BINARY_TO_STRING_DEFINITIONS = [
 		params: [
 			{ type: "number", offset: 0,  size: 1, formatter: "regions"   },	//	0: From Region choice
 			{ type: "number", offset: 1,  size: 1, formatter: "regions"   },	//	1: To Region choice
-			{ type: "number", offset: 2,  size: 1, formatter: "transport" } 	//	2: Creature choice
+			{ type: "number", offset: 2,  size: 1, formatter: "transport", altthreshold: 64, altformatter: "creatures" } 	//	2: Creature choice
 		],
 		desc: "System.String|{0}|From Region|0|regions><System.String|{1}|To Region|1|regions><System.String|{2}|Creature Type|2|transport><><0><0"
 	},
