@@ -1162,7 +1162,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoAllRegionsExcept: function(desc) {
+	BingoAllRegionsExcept: function(desc, _board) {
 		const thisname = "BingoAllRegionsExcept";
 		//	desc of format ["System.String|UW|Region|0|regionsreal", "SU|HI|DS|CC|GW|SH|VS|LM|SI|LF|UW|SS|SB|LC", "0", "System.Int32|13|Amount|1|NULL", "0", "0"]
 		checkDescriptors(thisname, desc.length, 6, "parameter item count");
@@ -1192,7 +1192,7 @@ export const CHALLENGES = {
 			category: "Entering regions while never visiting one",
 			items: [items[2], "To do", "Progress", "Total"],
 			values: [items[1], desc[1], String(amt), String(amt2)],
-			description: "Enter " + String(amt2 - amt) + " regions that are not " + regionToDisplayText(board.character, items[1], "Any Subregion") + ".",
+			description: "Enter " + String(amt2 - amt) + " regions that are not " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
 			comments: "This challenge is potentially quite customizable; only regions in the list need to be entered. Normally, the list is populated with all campaign story regions (i.e. corresponding Wanderer pips), so that progress can be checked on the sheltering screen. All that matters towards completion, is Progress equaling Total; thus we can set a lower bar and play a \"The Wanderer\"-lite; or we could set a specific collection of regions to enter, to entice players towards them. Downside: the latter functionality is not currently supported in-game: the region list is something of a mystery unless viewed and manually tracked. (This goal generates with all regions listed, so that all will contribute towards the goal.)",
 			paint: [
 				{ type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
@@ -1238,7 +1238,7 @@ export const CHALLENGES = {
 			var regi = regionOfRoom(v[1]).toUpperCase();
 			if (BingoEnum_AllRegionCodes.indexOf(regi) < 0)
 				throw new TypeError(thisname + ": error, region \"" + regi + "\" not found in AllRegionCodes[]");
-			var r = regionToDisplayText(board.character, regi, "Any Subregion");
+			var r = regionToDisplayText(_board.character, regi, "Any Subregion");
 			if (r > "") r = ", in " + r;
 			if (v[1] === "gw_c11")
 				r += " underground";
@@ -1294,7 +1294,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoCollectPearlChallenge: function(desc) {
+	BingoCollectPearlChallenge: function(desc, _board) {
 		const thisname = "BingoCollectPearlChallenge";
 		//	desc of format ["System.Boolean|true|Specific Pearl|0|NULL", "System.String|LF_bottom|Pearl|1|pearls", "0", "System.Int32|1|Amount|3|NULL", "0", "0", ""]
 		checkDescriptors(thisname, desc.length, 7, "parameter item count");
@@ -1322,15 +1322,15 @@ export const CHALLENGES = {
 					throw new TypeError(thisname + ": error, item \"" + items[1] + "\" not found in dataPearlToRegionMap[]");
 				if (items[1] === "DM") {
 					//	Special case: DM pearl is found in DM only for Spearmaster; it's MS any other time
-					if (Object.values(BingoEnum_CharToDisplayText).indexOf(board.character) < 0
-							|| board.character === "Nightcat" || board.character === "Any")
+					if (Object.values(BingoEnum_CharToDisplayText).indexOf(_board.character) < 0
+							|| _board.character === "Nightcat" || _board.character === "Any")
 						r = regionCodeToDisplayName["DM"] + " / " + regionCodeToDisplayName["MS"];
-					else if (board.character === "Spearmaster")
+					else if (_board.character === "Spearmaster")
 						r = regionCodeToDisplayName["DM"];
 					else
 						r = regionCodeToDisplayName["MS"];
 				} else {
-					r = regionToDisplayText(board.character, regi, "Any Subregion");
+					r = regionToDisplayText(_board.character, regi, "Any Subregion");
 				}
 			}
 			d = "Collect the " + dataPearlToDisplayTextMap[items[1]] + " pearl from " + r + ".";
@@ -1468,7 +1468,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoDamageChallenge: function(desc) {
+	BingoDamageChallenge: function(desc, _board) {
 		const thisname = "BingoDamageChallenge";
 		//	desc of format (< v1.091) ["System.String|JellyFish|Weapon|0|weapons", "System.String|WhiteLizard|Creature Type|1|creatures", "0", "System.Int32|6|Amount|2|NULL", "0", "0"]
 		//	or (>= v1.091) ["System.String|JellyFish|Weapon|0|weapons", "System.String|AquaCenti|Creature Type|1|creatures", "0", "System.Int32|5|Amount|2|NULL", "System.Boolean|false|In One Cycle|0|NULL", "System.String|Any Region|Region|5|regions", "System.String|Any Subregion|Subregion|4|subregions", "0", "0"]
@@ -1522,7 +1522,7 @@ export const CHALLENGES = {
 			return r;
 		}
 		function DamageChallengeDescription(p) {
-			var r = regionToDisplayText(board.character, p.region, p.subregion);
+			var r = regionToDisplayText(_board.character, p.region, p.subregion);
 			if (r > "") r = ", in " + r;
 			var d = "Hit " + entityDisplayText(p.victim) + " with " + entityDisplayText(p.weapon);
 			d += " " + String(p.amount) + ((p.amount > 1) ? " times" : " time") + r;
@@ -1703,7 +1703,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoEchoChallenge: function(desc) {
+	BingoEchoChallenge: function(desc, _board) {
 		const thisname = "BingoEchoChallenge";
 		//	desc of format (< v1.2) ["System.String|SB|Region|0|echoes", "System.Boolean|false|While Starving|1|NULL", "0", "0"]
 		//	or (>= v1.2) ["System.Boolean|false|Specific Echo|0|NULL", "System.String|SB|Region|1|echoes", "System.Boolean|true|While Starving|3|NULL", "0", "System.Int32|2|Amount|2|NULL", "0", "0", ""]
@@ -1717,7 +1717,7 @@ export const CHALLENGES = {
 		var echor = checkSettingBox(thisname, desc[1], ["System.String", , "Region", , "echoes"], "echo region");
 		if (BingoEnum_AllRegionCodes.indexOf(echor[1]) < 0)
 			throw new TypeError(thisname + ": error, region \"" + echor[1] + "\" not found in AllRegionCodes[]");
-		var r = regionToDisplayText(board.character, echor[1], "Any Subregion");
+		var r = regionToDisplayText(_board.character, echor[1], "Any Subregion");
 		var starv = checkSettingBox(thisname, desc[2], ["System.Boolean", , "While Starving", , "NULL"], "starving flag");
 		if (starv[1] !== "true" && starv[1] !== "false")
 			throw new TypeError(thisname + ": error, starving flag \"" + starv[1] + "\" not 'true' or 'false'");
@@ -1766,14 +1766,14 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoEnterRegionChallenge: function(desc) {
+	BingoEnterRegionChallenge: function(desc, _board) {
 		const thisname = "BingoEnterRegionChallenge";
 		//	desc of format ["System.String|CC|Region|0|regionsreal", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
 		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "regionsreal"], "enter region");
 		if (BingoEnum_AllRegionCodes.indexOf(items[1]) < 0)
 			throw new TypeError(thisname + ": error, region \"" + items[1] + "\" not found in AllRegionCodes[]");
-		var r = regionToDisplayText(board.character, items[1], "Any Subregion");
+		var r = regionToDisplayText(_board.character, items[1], "Any Subregion");
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
 		b[3] = enumToValue(items[1], "regionsreal");
@@ -1915,7 +1915,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoItemHoardChallenge: function(desc) {
+	BingoItemHoardChallenge: function(desc, _board) {
 		const thisname = "BingoItemHoardChallenge";
 		//	desc of format (< v1.092) ["System.Int32|5|Amount|1|NULL", "System.String|PuffBall|Item|0|expobject", "0", "0"]
 		//	or (>= 1.092) ["System.Boolean|true|Any Shelter|2|NULL", "0", "System.Int32|4|Amount|0|NULL", "System.String|DangleFruit|Item|1|expobject", "0", "0", ""]
@@ -1947,7 +1947,7 @@ export const CHALLENGES = {
 			if (BingoEnum_AllRegionCodes.indexOf(reg[1]) < 0)
 				throw new TypeError(thisname + ": error, region selection \"" + reg[1] + "\" not found in AllRegionCodes[]");
 		}
-		var r = regionToDisplayText(board.character, reg[1], "Any Subregion") + ".";
+		var r = regionToDisplayText(_board.character, reg[1], "Any Subregion") + ".";
 		if (r.length > 1) r = ", in " + r;
 		var d = "";
 		if (any[1] === "true")
@@ -2023,7 +2023,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoKillChallenge: function(desc) {
+	BingoKillChallenge: function(desc, _board) {
 		const thisname = "BingoKillChallenge";
 		//	assert: desc of format (< v1.2) ["System.String|Scavenger|Creature Type|0|creatures", "System.String|Any Weapon|Weapon Used|6|weaponsnojelly", "System.Int32|5|Amount|1|NULL", "0", "System.String|Any Region|Region|5|regions", "System.String|Any Subregion|Subregion|4|subregions", "System.Boolean|false|In one Cycle|3|NULL", "System.Boolean|false|Via a Death Pit|7|NULL", "System.Boolean|false|While Starving|2|NULL", "0", "0"]
 		//	or (>= v1.2) [System.String|TentaclePlant|Creature Type|0|creatures", "System.String|Any Weapon|Weapon Used|6|weaponsnojelly", "System.Int32|4|Amount|1|NULL", "0", "System.String|Any Region|Region|5|regions", "System.Boolean|false|In one Cycle|3|NULL", "System.Boolean|false|Via a Death Pit|7|NULL", "System.Boolean|false|While Starving|2|NULL", "System.Boolean|false|While under mushroom effect|8|NULL", "0", "0"]
@@ -2065,7 +2065,7 @@ export const CHALLENGES = {
 			if (BingoEnum_AllSubregions.indexOf(v[4]) == -1)
 				throw new TypeError(thisname + ": error, subregion selection \"" + v[4] + "\" not found in BingoEnum_AllSubregions[]");
 		}
-		var r = regionToDisplayText(board.character, v[3], v[4]);
+		var r = regionToDisplayText(_board.character, v[3], v[4]);
 		if (r > "") r = " in " + r;
 		var w = ", with a death pit";
 		if (!BingoEnum_Weapons.includes(v[1]))
@@ -2251,7 +2251,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoNoRegionChallenge: function(desc) {
+	BingoNoRegionChallenge: function(desc, _board) {
 		const thisname = "BingoNoRegionChallenge";
 		//	desc of format ["System.String|SI|Region|0|regionsreal", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
@@ -2267,7 +2267,7 @@ export const CHALLENGES = {
 			category: "Avoiding a region",
 			items: [items[2]],
 			values: [items[1]],
-			description: "Do not enter " + regionToDisplayText(board.character, items[1], "Any Subregion") + ".",
+			description: "Do not enter " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
 			comments: "",
 			paint: [
 				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
@@ -2295,7 +2295,7 @@ export const CHALLENGES = {
 			category: "Delivering colored pearls to an Iterator",
 			items: [items[2]],
 			values: [items[1]],
-			description: "Deliver " + regionToDisplayText(board.character, items[1], "Any Subregion") + " colored pearl to " + iteratorNameToDisplayTextMap[oracle] + ".",
+			description: "Deliver " + regionToDisplayText(_board.character, items[1], "Any Subregion") + " colored pearl to " + iteratorNameToDisplayTextMap[oracle] + ".",
 			comments: "",
 			paint: [
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
@@ -2308,7 +2308,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoPearlHoardChallenge: function(desc) {
+	BingoPearlHoardChallenge: function(desc, _board) {
 		const thisname = "BingoPearlHoardChallenge";
 		//	desc of format (< v1.2) ["System.Boolean|false|Common Pearls|0|NULL", "System.Int32|2|Amount|1|NULL", "System.String|SL|In Region|2|regions", "0", "0"]
 		//	or (>= v1.2) ["System.Boolean|true|Common Pearls|0|NULL", "System.Boolean|false|Any Shelter|2|NULL", "0", "System.Int32|2|Amount|1|NULL", "System.String|LF|Region|3|regions", "0", "0", ""]
@@ -2337,7 +2337,7 @@ export const CHALLENGES = {
 				throw new TypeError(thisname + ": error, region selection \"" + reg[1] + "\" not found in AllRegionCodes[]");
 			r = ", in " + r;
 		}
-		var r = regionToDisplayText(board.character, reg[1], "Any Subregion");
+		var r = regionToDisplayText(_board.character, reg[1], "Any Subregion");
 		if (r > "") r = ", in " + r;
 		var d = " common pearl";
 		if (common[1] === "false") d = " colored pearl";
@@ -2377,7 +2377,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoPinChallenge: function(desc) {
+	BingoPinChallenge: function(desc, _board) {
 		const thisname = "BingoPinChallenge";
 		//	desc of format ["0", "System.Int32|5|Amount|0|NULL", "System.String|PinkLizard|Creature Type|1|creatures", "", "System.String|SU|Region|2|regions", "0", "0"]
 		checkDescriptors(thisname, desc.length, 7, "parameter item count");
@@ -2395,7 +2395,7 @@ export const CHALLENGES = {
 		if (r !== "Any Region") {
 			if (BingoEnum_AllRegionCodes.indexOf(v[2]) < 0)
 				throw new TypeError(thisname + ": error, region \"" + v[2] + "\" not found in AllRegionCodes[]");
-			r = regionToDisplayText(board.character, v[2], "Any Subregion");
+			r = regionToDisplayText(_board.character, v[2], "Any Subregion");
 		} else {
 			r = "different regions";
 		}
@@ -2688,7 +2688,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoTransportChallenge: function(desc) {
+	BingoTransportChallenge: function(desc, _board) {
 		const thisname = "BingoTransportChallenge";
 		//	desc of format ["System.String|Any Region|From Region|0|regions", "System.String|DS|To Region|1|regions", "System.String|CicadaA|Creature Type|2|transport", "", "0", "0"]
 		checkDescriptors(thisname, desc.length, 6, "parameter item count");
@@ -2700,12 +2700,12 @@ export const CHALLENGES = {
 		if (r1 !== "Any Region") {
 			if (BingoEnum_AllRegionCodes.indexOf(r1) < 0)
 				throw new TypeError(thisname + ": error, region \"" + v[0] + "\" not found in AllRegionCodes[]");
-			r1 = regionToDisplayText(board.character, v[0], "Any Subregion");
+			r1 = regionToDisplayText(_board.character, v[0], "Any Subregion");
 		}
 		if (r2 !== "Any Region") {
 			if (BingoEnum_AllRegionCodes.indexOf(r2) < 0)
 				throw new TypeError(thisname + ": error, region \"" + v[1] + "\" not found in AllRegionCodes[]");
-			r2 = regionToDisplayText(board.character, v[1], "Any Subregion");
+			r2 = regionToDisplayText(_board.character, v[1], "Any Subregion");
 		}
 		if (creatureNameToDisplayTextMap[v[2]] === undefined)
 			throw new TypeError(thisname + ": error, creature type \"" + v[2] + "\" not found in creatureNameToDisplayTextMap[]");
@@ -2738,7 +2738,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoUnlockChallenge: function(desc) {
+	BingoUnlockChallenge: function(desc, _board) {
 		const thisname = "BingoUnlockChallenge";
 		//	desc of format ["System.String|SingularityBomb|Unlock|0|unlocks", "0", "0"]
 		checkDescriptors(thisname, desc.length, 3, "parameter item count");
@@ -2760,7 +2760,7 @@ export const CHALLENGES = {
 			p[0].color = RainWorldColors.TokenDefault;
 			if (!(regionCodeToDisplayName[items[1]] || regionCodeToDisplayNameSaint[items[1]] || arenaUnlocksGoldToDisplayName[items[1]]))
 				throw new TypeError(thisname + ": error, arena \"" + items[1] + "\" not found in regions[] or arenaUnlocksGoldToDisplayName[]");
-			d = (arenaUnlocksGoldToDisplayName[items[1]] || regionToDisplayText(board.character, items[1], "Any Subregion")) + " Arenas";
+			d = (arenaUnlocksGoldToDisplayName[items[1]] || regionToDisplayText(_board.character, items[1], "Any Subregion")) + " Arenas";
 		} else if (BingoEnum_ArenaUnlocksGreen.includes(items[1])) {
 			p[0].color = RainWorldColors.GreenColor;
 			iconName = "Kill_Slugcat";
@@ -2773,7 +2773,7 @@ export const CHALLENGES = {
 			var s = items[1].substring(0, items[1].search("-"));
 			if (BingoEnum_AllRegionCodes.indexOf(s) < 0)
 				throw new TypeError(thisname + ": error, region \"" + s + "\" not found in AllRegionCodes[]");
-			d = regionToDisplayText(board.character, s, "Any Subregion") + " Safari";
+			d = regionToDisplayText(_board.character, s, "Any Subregion") + " Safari";
 		} else {
 			throw new TypeError(thisname + ": error, token \"" + items[1] + "\" not found in BingoEnum_ArenaUnlocks[]");
 		}
@@ -2806,7 +2806,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": error, region \"" + desc[0] + "\" does not match room \"" + items[1] + "\"'s region");
 		if (BingoEnum_AllRegionCodes.indexOf(desc[0]) < 0)
 			throw new TypeError(thisname + ": error, region \"" + desc[0] + "\" not found in AllRegionCodes[]");
-		var v = regionToDisplayText(board.character, desc[0], "Any Subregion");
+		var v = regionToDisplayText(_board.character, desc[0], "Any Subregion");
 		var roomX = parseInt(desc[2]);
 		if (isNaN(roomX) || roomX < 0 || roomX > INT_MAX)
 			throw new TypeError(thisname + ": error, amount \"" + desc[2] + "\" not a number or out of range");
@@ -2850,7 +2850,7 @@ export const CHALLENGES = {
 	},
 	//	Challenges are alphabetical up to here (initial version); new challenges/variants added chronologically below
 	//	added 0.86 (in 0.90 update cycle)
-	BingoEnterRegionFromChallenge: function(desc) {
+	BingoEnterRegionFromChallenge: function(desc, _board) {
 		const thisname = "BingoEnterRegionFromChallenge";
 		//	desc of format ["System.String|GW|From|0|regionsreal", "System.String|SH|To|0|regionsreal", "0", "0"]
 		checkDescriptors(thisname, desc.length, 4, "parameter item count");
@@ -2870,7 +2870,7 @@ export const CHALLENGES = {
 			category: "Entering a region from another region",
 			items: [items[2], itemTo[2]],
 			values: [items[1], itemTo[1]],
-			description: "First time entering " + regionToDisplayText(board.character, itemTo[1], "Any Subregion") + " must be from " + regionToDisplayText(board.character, items[1], "Any Subregion") + ".",
+			description: "First time entering " + regionToDisplayText(_board.character, itemTo[1], "Any Subregion") + " must be from " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
 			comments: "",
 			paint: [
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
