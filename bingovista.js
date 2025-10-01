@@ -1484,7 +1484,7 @@ export const CHALLENGES = {
 				op: "replace", offs: 6, find: "Journey\\'s End", replace: "Journey's End"
 			} ]
 		};
-		desc = upgradeDescriptor(desc, upgrades);
+		desc = upgradeDescriptor(desc, upgrades, thisname);
 		const template = [
 			{ param: "weapon",  type: "string", formatter: "weapons", parse: "SettingBox", parseFmt: { datatype: "System.String", name: "Weapon", position: "0", formatter: "weapons", altformatter: "", altthreshold: 0, defaultval: "Any Weapon" } },
 			{ param: "victim",  type: "string", formatter: "creatures", parse: "SettingBox", parseFmt: { datatype: "System.String", name: "Creature Type", position: "1", formatter: "creatures", altformatter: "", altthreshold: 0, defaultval: "Any Creature" } },
@@ -1496,7 +1496,7 @@ export const CHALLENGES = {
 			{ param: "completed", type: "number", formatter: "", parse: "parseInt", defaultval: 0 },
 			{ param: "revealed",  type: "number", formatter: "", parse: "parseInt", defaultval: 0 }
 		];
-		var params = challengeTextToAbstract(desc, template);
+		var params = challengeTextToAbstract(desc, template, thisname);
 		function DamageChallengePaint(p) {
 			var r = [];
 			if (p.weapon !== "Any Weapon") {
@@ -5620,8 +5620,8 @@ function checkSettingBoxEx(s, template) {
 			rr.index = -1;
 		} else {
 			rr.index = (ALL_ENUMS[template.formatter].indexOf(template.defaultval) >= 0) ? (ALL_ENUMS[template.formatter].indexOf(template.defaultval)) : (ALL_ENUMS[template.altformatter]?.indexOf(template.defaultval) + template.altthreshold);
-			idx1 = ALL_ENUMS[template.formatter].indexOf(ar[1]);
-			idx2 = ALL_ENUMS[template.altformatter]?.indexOf(ar[1]) || -1;
+			var idx1 = ALL_ENUMS[template.formatter].indexOf(ar[1]);
+			var idx2 = ALL_ENUMS[template.altformatter]?.indexOf(ar[1]) || -1;
 			if (idx1 < 0 && idx2 < 0) {
 				rr.error.push("value not found in list; using default");
 			} else {
@@ -5718,7 +5718,7 @@ function regionOfRoom(r) {
  *		["new first string", "foo", "bar", "insert string 1", "added text 2", "baz", "new last string"]
  *	@return d is modified in place; it's also returned for convenience
  */
-function upgradeDescriptor(d, upg) {
+function upgradeDescriptor(d, upg, thisname) {
 	var iterations = 0;
 	do {
 		var l = d.length;
@@ -5794,7 +5794,7 @@ function upgradeDescriptor(d, upg) {
  */
 //function challengeTextToAbstract(s, template) {
 //	var desc = s.split("><");
-function challengeTextToAbstract(desc, template) {
+function challengeTextToAbstract(desc, template, thisname) {
 	if (desc.length != template.length) throw new TypeError(thisname + ": found " + desc.length + " parameters, expected: " + template.length);
 	var params = { _error: {}, _templates: {} };
 	for (var i = 0; i < template.length; i++) {
