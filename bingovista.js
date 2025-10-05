@@ -1516,7 +1516,7 @@ export const CHALLENGES = {
 				r.push( { type: "text", value: p.subregion, color: RainWorldColors.Unity_white } );
 			}
 			r.push( { type: "break" } );
-			r.push( { type: "text", value: "[0/" + String(p.amount) + "]", color: RainWorldColors.Unity_white } );
+			r.push( { type: "text", value: "[" + String(p.current) + "/" + String(p.amount) + "]", color: RainWorldColors.Unity_white } );
 			if (p.onecycle)
 				r.push( { type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 			return r;
