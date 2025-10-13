@@ -1572,7 +1572,7 @@ export const CHALLENGES = {
 		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Creature Type", , "depths"], "creature selection");
 		if (BingoEnum_Depthable[items[1]] === undefined && creatureNameToDisplayTextMap[items[1]] === undefined)
 			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in creatures");
-		d = entityNameQuantify(1, items[1]);
+		var d = entityNameQuantify(1, items[1]);
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
 		if (BingoEnum_Transportable.includes(items[1]))
