@@ -34,7 +34,8 @@ export const atlases = [
 	{ img: "bvicons.png",      txt: "bvicons.txt",      canv: undefined, frames: {} },	/**< anything not found below */
 	{ img: "bingoicons.png",   txt: "bingoicons.txt",   canv: undefined, frames: {} },	/**< from Bingo mod */
 	{ img: "uispritesmsc.png", txt: "uispritesmsc.txt", canv: undefined, frames: {} }, 	/**< from DLC       */
-	{ img: "uiSprites.png",    txt: "uiSprites.txt",    canv: undefined, frames: {} } 	/**< from base game */
+	{ img: "uiSprites.png",    txt: "uiSprites.txt",    canv: undefined, frames: {} }, 	/**< from base game */
+	{ img: "uispriteswatcher.png",    txt: "uispriteswatcher.txt",    canv: undefined, frames: {} } 	/**< from Watcher */
 ];
 
 /**
@@ -58,6 +59,7 @@ const square = {
  *	rounded value?
  */
 const INT_MAX = 30000;
+const INT_MIN = -30000;
 /** As INT_MAX, but for challenges *very* unlikely to need >1 byte */
 const CHAR_MAX = 250;
 
@@ -1139,10 +1141,21 @@ export const CHALLENGES = {
 			toBin: b.subarray(0, enc.length + GOAL_LENGTH)
 		};
 	},
+	WatcherBingoAchievementChallenge: function(desc, _board) {
+		return CHALLENGES.BingoAchievementChallenge(desc, _board);
+	},
 	BingoAchievementChallenge: function(desc) {
 		const thisname = "BingoAchievementChallenge";
 		//	assert: desc of format ["System.String|Traveller|Passage|0|passage", "0", "0"]
 		checkDescLen(thisname, desc.length, 3);
+		// Normalize legacy formatter token "Wpassage" -> "passage" in desc[0]
+		if (typeof desc[0] === "string") {
+			var parts = desc[0].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wpassage") {
+				parts[parts.length - 1] = "passage";
+				desc[0] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Passage", , "passage"], "goal selection");
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
@@ -1162,6 +1175,9 @@ export const CHALLENGES = {
 			],
 			toBin: new Uint8Array(b)
 		};
+	},
+	WatcherBingoAllRegionsExceptChallenge: function(desc, _board) {
+		return CHALLENGES.BingoAllRegionsExcept(desc, _board);
 	},
 	BingoAllRegionsExcept: function(desc, _board) {
 		const thisname = "BingoAllRegionsExcept";
@@ -1205,6 +1221,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoBombTollChallenge: function(desc, _board) {
+		return CHALLENGES.BingoBombTollChallenge(desc, _board);
+	},
 	BingoBombTollChallenge: function(desc, _board) {
 		const thisname = "BingoBombTollChallenge";
 		//	desc of format (< v1.2) ["System.String|gw_c05|Scavenger Toll|1|tolls", "System.Boolean|false|Pass the Toll|0|NULL", "0", "0"]
@@ -1216,6 +1235,14 @@ export const CHALLENGES = {
 		checkDescLen(thisname, desc.length, 8);
 		var v = [], i = [];
 		var items = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific toll", , "NULL"], "specific flag"); v.push(items[1]); i.push(items[2]);
+		// Normalize legacy formatter token "Wtolls" -> "tolls" in desc[1]
+		if (typeof desc[1] === "string") {
+			var parts = desc[1].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wtolls") {
+				parts[parts.length - 1] = "tolls";
+				desc[1] = parts.join("|");
+			}
+		}
 		items = checkSettingBox(thisname, desc[1], ["System.String", , "Scavenger Toll", , "tolls"], "toll selection"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingBox(thisname, desc[2], ["System.Boolean", , "Pass the Toll", , "NULL"], "pass toll flag"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "amount"); v.push(items[1]); i.push(items[2]);
@@ -1294,6 +1321,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoCollectPearlChallenge: function(desc, _board) {
+		return CHALLENGES.BingoCollectPearlChallenge(desc, _board);
+	},
 	BingoCollectPearlChallenge: function(desc, _board) {
 		const thisname = "BingoCollectPearlChallenge";
 		//	desc of format ["System.Boolean|true|Specific Pearl|0|NULL", "System.String|LF_bottom|Pearl|1|pearls", "0", "System.Int32|1|Amount|3|NULL", "0", "0", ""]
@@ -1301,6 +1331,14 @@ export const CHALLENGES = {
 		var speci = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific Pearl", , "NULL"], "specific pearl flag");
 		if (speci[1] !== "true" && speci[1] !== "false")
 			throw new TypeError(thisname + ": starving flag \"" + speci[1] + "\" not 'true' or 'false'");
+		// Normalize legacy formatter token "Wpearls" -> "pearls" in desc[1]
+		if (typeof desc[1] === "string") {
+			var parts = desc[1].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wpearls") {
+				parts[parts.length - 1] = "pearls";
+				desc[1] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Pearl", , "pearls"], "pearl selection");
 		if (!DataPearlList.includes(items[1])) {
 			throw new TypeError(thisname + ": item \"" + items[1] + "\" not found in DataPearlList[]");
@@ -1335,7 +1373,7 @@ export const CHALLENGES = {
 			}
 			d = "Collect the " + dataPearlToDisplayTextMap[items[1]] + " pearl from " + r + ".";
 			p = [
-				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
+				{ type: "text", value: (items[1] && items[1].startsWith("W") ? items[1].split("_").pop() : items[1]), color: RainWorldColors.Unity_white },
 				{ type: "break" },
 				{ type: "icon", value: "Symbol_Pearl", scale: 1, color: dataPearlToColorMap[items[1]], rotation: 0, background:
 					{ type: "icon", value: "radialgradient", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
@@ -1644,6 +1682,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoEatChallenge: function(desc) {
+		return CHALLENGES.BingoEatChallenge(desc);
+	},
 	BingoEatChallenge: function(desc) {
 		const thisname = "BingoEatChallenge";
 		//	desc of format (< v1.2) ["System.Int32|6|Amount|1|NULL", "0", "0", "System.String|DangleFruit|Food type|0|food", "0", "0"]
@@ -1660,6 +1701,14 @@ export const CHALLENGES = {
 		if (isNaN(isCrit) || isCrit < 0 || isCrit > 1)
 			throw new TypeError(thisname + ": isCreature \"" + desc[2] + "\" not a number or out of range");
 		isCrit = (isCrit == 1) ? "true" : "false";
+		// Normalize legacy formatter token "Wfood" -> "food" in desc[3]
+		if (typeof desc[3] === "string") {
+			var parts = desc[3].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wfood") {
+				parts[parts.length - 1] = "food";
+				desc[3] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[3], ["System.String", , "Food type", , "food"], "eat type");
 		if (!BingoEnum_FoodTypes.includes(items[1]))
 			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in food");
@@ -1756,6 +1805,9 @@ export const CHALLENGES = {
 			paint: p,
 			toBin: new Uint8Array(b)
 		};
+	},
+	WatcherBingoEnterRegionChallenge: function(desc, _board) {
+		return CHALLENGES.BingoEnterRegionChallenge(desc, _board);
 	},
 	BingoEnterRegionChallenge: function(desc, _board) {
 		const thisname = "BingoEnterRegionChallenge";
@@ -2240,6 +2292,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoNoRegionChallenge: function(desc, _board) {
+		return CHALLENGES.BingoNoRegionChallenge(desc, _board);
+	},
 	BingoNoRegionChallenge: function(desc, _board) {
 		const thisname = "BingoNoRegionChallenge";
 		//	desc of format ["System.String|SI|Region|0|regionsreal", "0", "0"]
@@ -2516,6 +2571,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoStealChallenge: function(desc) {
+		return CHALLENGES.BingoStealChallenge(desc);
+	},
 	BingoStealChallenge: function(desc) {
 		const thisname = "BingoStealChallenge";
 		//	assert: desc of format ["System.String|Rock|Item|1|theft",
@@ -2524,6 +2582,14 @@ export const CHALLENGES = {
 		checkDescLen(thisname, desc.length, 6);
 		var v = [], i = [];
 		var p = [ { type: "icon", value: "steal_item", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } ];
+		// Normalize legacy formatter token "Wtheft" -> "theft" in desc[0]
+		if (typeof desc[0] === "string") {
+			var parts = desc[0].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wtheft") {
+				parts[parts.length - 1] = "theft";
+				desc[0] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Item", , "theft"], "item selection"); v.push(items[1]); i.push(items[2]);
 		if (!BingoEnum_theft.includes(v[0]))
 			throw new TypeError(thisname + ": item \"" + v[0] + "\" not in theft");
@@ -2565,6 +2631,9 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoTameChallenge: function(desc) {
+		return CHALLENGES.BingoTameChallenge(desc);
+	},
 	BingoTameChallenge: function(desc) {
 		const thisname = "BingoTameChallenge";
 		//	assert: desc of format ["System.String|EelLizard|Creature Type|0|friend", "0", "0"]
@@ -2578,6 +2647,14 @@ export const CHALLENGES = {
 		checkDescLen(thisname, desc.length, 7);
 		var v = [], i = [];
 		var items = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific Creature Type", , "NULL"], "creature type flag"); v.push(items[1]); i.push(items[2]);
+		// Normalize legacy formatter token "Wfriend" -> "friend" in desc[1]
+		if (typeof desc[1] === "string") {
+			var parts = desc[1].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wfriend") {
+				parts[parts.length - 1] = "friend";
+				desc[1] = parts.join("|");
+			}
+		}
 		items = checkSettingBox(thisname, desc[1], ["System.String", , "Creature Type", , "friend"], "friend selection"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingBox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "friend count"); v.push(items[1]); i.push(items[2]);
 		var amt = parseInt(v[2]), am = parseInt(desc[2]);
@@ -2794,10 +2871,10 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": \"" + desc[0] + "\" not found in regions");
 		var v = regionToDisplayText(_board.character, desc[0], "Any Subregion");
 		var roomX = parseInt(desc[2]);
-		if (isNaN(roomX) || roomX < 0 || roomX > INT_MAX)
+		if (isNaN(roomX) || roomX < INT_MIN || roomX > INT_MAX)
 			throw new TypeError(thisname + ": amount \"" + desc[2] + "\" not a number or out of range");
 		var roomY = parseInt(desc[3]);
-		if (isNaN(roomY) || roomY < 0 || roomY > INT_MAX)
+		if (isNaN(roomY) || roomY < INT_MIN || roomY > INT_MAX)
 			throw new TypeError(thisname + ": amount \"" + desc[3] + "\" not a number or out of range");
 		var idx = BingoEnum_VistaPoints.findIndex(o => o.room == items[1] && o.x == roomX && o.y == roomY);
 		if (idx < 0) {
@@ -3086,7 +3163,195 @@ export const CHALLENGES = {
 			],
 			toBin: new Uint8Array(b)
 		};
-	}
+	},
+	WatcherBingoSpinningTopChallenge: function(desc, _board) {
+		const thisname = "WatcherBingoSpinningTopChallenge";
+		//	or (>= v1.2) ["System.Boolean|false|Specific Location|0|NULL", "System.String|SB|Region|1|echoes", "System.Boolean|true|While Starving|3|NULL", "0", "System.Int32|2|Amount|2|NULL", "0", "0", ""]
+		checkDescLen(thisname, desc.length, 8);
+		var speci = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific location", , "NULL"], "specific flag");
+		if (speci[1] !== "true" && speci[1] !== "false")
+			throw new TypeError(thisname + ": specific flag \"" + speci[1] + "\" not 'true' or 'false'");
+		var echor = checkSettingBox(thisname, desc[1], ["System.String", , "Region", , "spinners"], "echo region");
+		if (BingoEnum_AllRegionCodes.indexOf(echor[1]) < 0)
+			throw new TypeError(thisname + ": \"" + echor[1] + "\" not found in regions");
+		var r = regionToDisplayText(_board.character, echor[1], "Any Subregion");
+		var starv = checkSettingBox(thisname, desc[2], ["System.Boolean", , "While Starving", , "NULL"], "starving flag");
+		if (starv[1] !== "true" && starv[1] !== "false")
+			throw new TypeError(thisname + ": starving flag \"" + starv[1] + "\" not 'true' or 'false'");
+		var amount = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "echo amount");
+		var amt = parseInt(amount[1]);
+		if (speci[1] === "false")
+			var am = parseInt(desc[3]);
+		amt = Math.min(amt, CHAR_MAX);
+		if (isNaN(amt) || amt < 1)
+			throw new TypeError(thisname + ": amount \"" + amount[1] + "\" not a number or out of range");
+		var visited = [];
+		if (desc[7] > "") {
+			desc[7].split("|");
+			for (var k = 0; k < visited.length; k++) {
+				if (BingoEnum_AllRegionCodes[visited[k]] === undefined)
+					throw new TypeError(thisname + ": visited \"" + visited[k] + "\" not found in regions");
+			}
+		}
+		var p = [
+			{ type: "icon", value: "spinningtop", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "text", value: ((speci[1] === "true") ? echor[1] : "[" + String(am) + "/" + amt + "]"), color: RainWorldColors.Unity_white }
+		];
+		if (starv[1] === "true") {
+			p.push( { type: "break" } );
+			p.push( { type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		}
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		applyBool(b, 1, 4, starv[1]);
+		b[3] = enumToValue(echor[1], "echoes");
+		b[2] = b.length - GOAL_LENGTH;
+		if (speci[1] === "false") {
+			b[0] = challengeValue("BingoEchoExChallenge");
+			b.push(amt);
+			visited.forEach(v => b.push(enumToValue(v, "regions")));
+		}
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Visit Spinning Top",
+			items: [speci[2], echor[2], starv[2], amount[2], "visited"],
+			values: [speci[1], echor[1], starv[1], String(amt), desc[7]],
+			description: "Visit Spinning Top " + ((speci[1] === "false") ? (String(amt) + " times") : ("in " + r)) + ((starv[1] === "true") ? ", while starving." : "."),
+			comments: "The \"visited\" list records the state of the multi-echo version. It is a <span class=\"code\">|</span>-separated list of region codes. A region is added to the list when its echo has been visited. By preloading this list, a customized \"all but these echoes\" challenge could be crafted (but, do note the list does not show in-game!).",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoCollectRippleSpawnChallenge: function(desc) {
+		const thisname = "WatcherBingoCollectRippleSpawnChallenge";
+		//	desc of format ["0", "System.Int32|3|Amount|1|NULL", "System.Boolean|true|In one Cycle|0|NULL", "0", "0"]
+		checkDescLen(thisname, desc.length, 5);
+		var amounts = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "ripple count");
+		var amt = parseInt(amounts[1]), am = parseInt(desc[0]);
+		amt = Math.min(amt, CHAR_MAX);
+		if (isNaN(amt) || amt < 1)
+			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
+		var items = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+		if (items[1] !== "true" && items[1] !== "false")
+			throw new TypeError(thisname + ": flag \"" + items[1] + "\" not 'true' or 'false'");
+		var p = [
+			{ type: "icon", value: "ripplespawn", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "break" },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
+		];
+		if (items[1] === "true")
+			p.splice(1, 0, { type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[3] = amt;
+		applyBool(b, 1, 4, items[1]);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Collecting Ripple Spawn",
+			items: [amounts[2], items[2]],
+			values: [amounts[1], items[1]],
+			description: "Collect " + entityNameQuantify(amt, "Ripple Spawn") + ((items[1] === "true") ? " in one cycle." : "."),
+			comments: "Collect ripple spawn hidden within every region. Visible only while holding a Karma Flower or having Karma reinforced. This is not necessary if Dial Warp perk is active.",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoOpenMelonsChallenge: function(desc) {
+		const thisname = "WatcherBingoOpenMelonsChallenge";
+		//	desc of format ["0", "System.Int32|3|Amount|1|NULL", "System.Boolean|true|In one Cycle|0|NULL", "0", "0"]
+		checkDescLen(thisname, desc.length, 5);
+		var amounts = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "melon count");
+		var amt = parseInt(amounts[1]), am = parseInt(desc[0]);
+		amt = Math.min(amt, CHAR_MAX);
+		if (isNaN(amt) || amt < 1)
+			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
+		var items = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+		if (items[1] !== "true" && items[1] !== "false")
+			throw new TypeError(thisname + ": flag \"" + items[1] + "\" not 'true' or 'false'");
+		var p = [
+			{ type: "icon", value: entityIconAtlas("Pomegranate"), scale: 1, color: entityIconColor("Pomegranate"), rotation: 0 },
+			{ type: "break" },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
+		];
+		if (items[1] === "true")
+			p.splice(1, 0, { type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[3] = amt;
+		applyBool(b, 1, 4, items[1]);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Open Pomegranates/Melons",
+			items: [amounts[2], items[2]],
+			values: [amounts[1], items[1]],
+			description: "Open " + entityNameQuantify(amt, "Pomegranates") + ((items[1] === "true") ? " in one cycle." : "."),
+			comments: "Open hanging pomegranates/melons found in various regions. They can be opened by jumping and grabbing onto them with enough speed.",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoCreaturePortalChallenge: function(desc, _board) {
+		const thisname = "WatcherBingoCreaturePortalChallenge";
+		//	desc of format [System.String|Frog|Creature Type|1|Wtransport><0><System.Int32|2|Amount|0|NULL><empty><0><0>]
+		checkDescLen(thisname, desc.length, 6);
+		var v = [], i = [];
+		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Creature Type", , "Wtransport"], "transportable creature type"); v.push(items[1]); i.push(items[2]);
+		if (creatureNameToDisplayTextMap[v[0]] === undefined)
+			throw new TypeError(thisname + ": \"" + v[0] + "\" not found in creatures");
+		var amounts = checkSettingBox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "warp count");
+		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
+		amt = Math.min(amt, CHAR_MAX);
+		if (isNaN(amt) || amt < 1)
+			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
+		var p = [
+			{ type: "icon", value: entityIconAtlas(v[0]), scale: 1, color: entityIconColor(v[0]), rotation: 0 },
+			{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "icon", value: "portal", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "break" },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
+		];
+		var b = Array(6); b.fill(0);
+		b[0] = challengeValue(thisname);
+		if (BingoEnum_Transportable.includes(v[0]))
+			b[5] = enumToValue(v[0], "transport");
+		else
+			b[5] = enumToValue(v[0], "creatures");
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Transporting creatures through portals",
+			items: i,
+			values: v,
+			description: "Transport " + entityNameQuantify(1, entityDisplayText(v[0])) + " through " + entityNameQuantify(amt, "Portals") + ".",
+			comments: "Transport a creature through a portal/warp either created by the player or naturally in the world.",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoPrinceChallenge: function(desc) {
+		const thisname = "WatcherBingoPrinceChallenge";
+		//	desc of format ["0", "0"]
+		checkDescLen(thisname, desc.length, 2);
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Visiting Prince",
+			items: [],
+			values: [],
+			description: "Visit Prince.",
+			comments: "",
+			paint: [
+				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "prince", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
+			],
+			toBin: new Uint8Array(b)
+		};
+	},
 };
 
 
@@ -3140,7 +3405,10 @@ const BingoEnum_theft = [
 	"FlyLure",
 	"SporePlant",
 	"LillyPuck",
-	"SingularityBomb"
+	"SingularityBomb",
+
+	"GraffitiBomb",
+	"Boomerang"
 ];
 
 /**
@@ -3201,7 +3469,11 @@ const BingoEnum_expobject = [
 	"Seed",
 	"GlowWeed",
 	//	DLCSharedEnums.AbstractObjectType
-	"SingularityBomb"
+	"SingularityBomb",
+
+	"FireSpriteLarva",
+	"GraffitiBomb",
+	"Boomerang",
 ];
 
 /**
@@ -3222,7 +3494,11 @@ const BingoEnum_Weapons = [
 	"SingularityBomb",
 	"FireEgg",
 	"LillyPuck",
-	"SingularityBomb"
+	"SingularityBomb",
+
+	"GraffitiBomb",
+	"Boomerang",
+	"Frog"
 ];
 
 /**
@@ -3314,7 +3590,14 @@ const BingoEnum_Befriendable = [
 	"SpitLizard",
 	"ZoopLizard",
 	"Salamander",	//	added 0.9
-	"RedLizard" 	//	added 0.99
+	"RedLizard", 	//	added 0.99
+
+	"PeachLizard",
+	"BasiliskLizard",
+	"IndigoLizard",
+	"BlizzardLizard",
+	"ProtoLizard",
+	"RotLizard"
 ];
 
 /**
@@ -3380,7 +3663,14 @@ const BingoEnum_FoodTypes = [
 	"SSOracleSwarmer",	//	added v1.2
 	"KarmaFlower",	//	and remaining possibilities why not (from IPlayerEdible references)
 	"FireEgg",
-	"SLOracleSwarmer"	//	guess I forgot one
+	"SLOracleSwarmer",	//	guess I forgot one
+
+	"Rat",
+	"FireSpriteLarva",
+	"Tardigrade",
+	"Frog",
+	"SandGrub",
+	"Barnacle"
 ];
 
 /**
@@ -3407,7 +3697,38 @@ const regionCodeToDisplayName = {
 	"SU": "Outskirts",
 	"UW": "The Exterior",
 	"VS": "Pipeyard",
-	"UNKNOWN": "UNKNOWN"
+	"UNKNOWN": "UNKNOWN",
+
+	"WARF": "Aether Ridge"         ,
+	"WBLA": "Badlands"             ,
+	"WARD": "Cold Storage"         ,
+	"WRFA": "Coral Caves"          ,
+	"WTDB": "Desolate Tract"       ,
+	"WARC": "Fetid Glen"           ,
+	"WVWB": "Fractured Gateways"   ,
+	"WARE": "Heat Ducts"           ,
+	"WMPA": "Migration Path"       ,
+	"WPGA": "Pillar Grove"         ,
+	"WRRA": "Rusted Wrecks"        ,
+	"WARB": "Salination"           ,
+	"WSKD": "Shrouded Stacks"      ,
+	"WPTA": "Signal Spires"        ,
+	"WSKC": "Stormy Coast"         ,
+	"WSKB": "Sunbaked Alley"       ,
+	"WARG": "The Surface"          ,
+	"WSKA": "Torrential Railways"  ,
+	"WTDA": "Torrid Desert"        ,
+	"WRFB": "Turbulent Pump"       ,
+	"WVWA": "Verdant Waterways"    ,
+	"WARA": "Shattered Terrace"    ,
+	"WRSA": "Daemon"               ,
+	"WAUA": "Ancient Urban"        ,
+	"WHIR": "Corrupted Factories"  ,
+	"WSUR": "Crumbling Fringes"    ,
+	"WDSR": "Decaying Tunnels"     ,
+	"WGWR": "Infested Wastes"      ,
+	"WSSR": "Unfortunate Evolution",
+	"WORA": "Outer Rim"            
 };
 
 /**
@@ -3436,7 +3757,12 @@ const BingoEnum_AllRegionCodes = [
 	"LF", "LM", "MS", "OE",
 	"RM", "SB", "SH", "SI",
 	"SL", "SS", "SU", "UG",
-	"UW", "VS"
+	"UW", "VS",
+
+	"WSKA", "WSKB", "WRFA", "WRRA", "WPGA", "WARF",
+	"WSKD", "WMPA", "WTDA", "WTDB", "WARG", "WARD",
+	"WBLA", "WARE", "WRFB", "WSKC", "WVWA", "WVWB",
+	"WARB", "WARC", "WPTA", "WARA", "WAUA", "WORA", "WRSA", "WSSR"
 ];
 
 /**
@@ -3590,7 +3916,11 @@ const BingoEnum_BombableOutposts = [
 	"lc_stripmallnew",
 	"lf_j01",
 	"oe_tower04",
-	"sb_topside"
+	"sb_topside",
+
+	"warf_g01",
+	"wbla_f01",
+	"wskd_b41"
 ];
 
 /**
@@ -3632,7 +3962,11 @@ const BingoEnum_BombedDict = [
 	"LC_stripmallNEW|True",
 	"LF_J01|True",
 	"OE_TOWER04|True",
-	"SB_TOPSIDE|True"
+	"SB_TOPSIDE|True",
+
+	"warf_g01|0,1",
+	"wbla_f01|0,1",
+	"wskd_b41|0,1",
 ];
 
 /**
@@ -3711,7 +4045,43 @@ const BingoEnum_ArenaUnlocksBlue = [
 	"Yeek",
 	"YellowLizard",
 	"ZoopLizard",
-	"SeedCob"	//	thanks Watcher
+	"SeedCob",	//	thanks Watcher
+
+	"Barnacle",
+	"Tardigrade",
+	"Frog",
+	"DrillCrab",
+	"SandGrub",
+	"BigSandGrub",
+	"SmallMoth",
+	"BigMoth",
+	"BoxWorm",
+	"FireSprite",
+	"ScavengerTemplar",
+	"ScavengerDisciple",
+	"Loach",
+	"RotLoach",
+	"Rattler",
+	"IndigoLizard",
+	"BlizzardLizard",
+	"BasiliskLizard",
+	"PeachLizard",
+	"ProtoLizard",
+	"RotLizard",
+	"Rat",
+	"Angler",
+	"SkyWhale",
+	"AltSkyWhale",
+	"RotDangleFruit",
+	"RotSeedCob",
+	"Pomegranate",
+	"Boomerang",
+	"GraffitiBomb",
+	"BallToy",
+	"SoftToy",
+	"SpinToy",
+	"WeirdToy",
+	"MothGrub"
 ];
 
 /**
@@ -3741,7 +4111,12 @@ const BingoEnum_ArenaUnlocksGold = [
 	"UW",
 	"VS",
 	"filter",
-	"gutter"
+	"gutter",
+
+	"WSKA", "WSKB", "WRFA", "WRRA", "WPGA", "WARF",
+	"WSKD", "WMPA", "WTDA", "WTDB", "WARG", "WARD",
+	"WBLA", "WARE", "WRFB", "WSKC", "WVWA", "WVWB",
+	"WARB", "WARC", "WPTA", "WARA", "WAUA", "WORA", "WRSA", "WSSR"
 ];
 
 /**
@@ -3764,7 +4139,8 @@ const BingoEnum_ArenaUnlocksGreen = [
 	"Gourmand",
 	"Rivulet",
 	"Saint",
-	"Spearmaster"
+	"Spearmaster",
+	"Watcher"
 ];
 
 /**
@@ -3824,6 +4200,7 @@ const RainWorldColors = {
 	"Slugcat_Yellow":      "#ffff73",
 	"Slugcat_Red":         "#ff7373",
 	"Slugcat_Night":       "#17234e",
+	"Slugcat_Watcher":     "#17234e",
 	"Slugcat_Sofanthiel":  "#17234f",
 	"Slugcat_Rivulet":     "#91ccf0",
 	"Slugcat_Artificer":   "#70233c",
@@ -3921,7 +4298,37 @@ const creatureNameToDisplayTextMap = {
 	"Yeek":            "Yeeks",
 	"BigJelly":        "Large Jellyfish",
 	"SlugNPC":         "Slugpups",
-	"Default":         "Unknown Creatures"
+	"Default":         "Unknown Creatures",
+
+	"AltSkyWhale":       "Rot Sky Whales",
+	"Angler":            "Anglers",
+	"Barnacle":          "Barnacles",
+	"BasiliskLizard":    "Basilisk Lizards",
+	"BigMoth":           "Big Moths",
+	"BigSandGrub":       "Sand Worms",
+	"BlizzardLizard":    "Blizzard Lizards",
+	"BoxWorm":           "Box Worms",
+	"DrillCrab":         "Drill Crabs",
+	"FireSprite":        "Fire Sprites",
+	"Frog":              "Frogs",
+	"GrappleSnake":      "Grapple Snakes",
+	"IndigoLizard":      "Indigo Lizards",
+	"Loach":             "Loaches",
+	"Millipede":         "Millipedes",
+	"MothGrub":          "Moth Grubs",
+	"PeachLizard":       "Peach Lizards",
+	"ProtoLizard":       "Proto Lizards",
+	"Rat":               "Rats",
+	"Rattler":           "Bone Shakers",
+	"RippleSpider":      "Ripple Spiders",
+	"RotLoach":          "Rot Behemoths",
+	"SandGrub":          "Sand Grubs",
+	"ScavengerDisciple": "Scavenger Disciples",
+	"ScavengerTemplar":  "Scavenger Templars",
+	"SkyWhale":          "Sky Whales",
+	"SmallMoth":         "Small Moths",
+	"Tardigrade":        "Tardigrades",
+	"TowerCrab":         "Tower Crabs"
 };
 
 /**
@@ -3991,7 +4398,36 @@ const creatureNameToIconAtlasMap = {
 	"Yeek":           	"Kill_Yeek",
 	"BigJelly":       	"Kill_BigJellyFish",
 	"SlugNPC":        	"Kill_Slugcat",
-	"Default":        	"Futile_White"
+	"Default":        	"Futile_White",
+
+	"Barnacle":          "Kill_Barnacle",
+	"DrillCrab":         "Kill_DrillCrab",
+	"TowerCrab":         "Kill_DrillCrab",
+	"SandGrub":          "Kill_SandGrub",
+	"BigSandGrub":       "Kill_BigSandGrub",
+	"BigMoth":           "Kill_BigMoth",
+	"SmallMoth":         "Kill_SmallMoth",
+	"BoxWorm":           "Kill_BoxWorm",
+	"FireSprite":        "Kill_FireSprite",
+	"SkyWhale":          "Kill_SkyWhale",
+	"AltSkyWhale":       "Kill_SkyWhale",
+	"ScavengerTemplar":  "Kill_ScavengerTemplar",
+	"ScavengerDisciple": "Kill_ScavengerDisciple",
+	"BlizzardLizard":    "Kill_BlizzardLizard",
+	"BasiliskLizard":    "Kill_Basilisk",
+	"IndigoLizard":      "Kill_IndigoLizard",
+	"PeachLizard":       "Kill_PeachLizard",
+	"ProtoLizard":       "Kill_ProtoLizard",
+	"Rat":               "Kill_Rat",
+	"Frog":              "Kill_Frog",
+	"Loach":             "Kill_Loach",
+	"RotLoach":          "Kill_RotLoach",
+	"Rattler":           "Kill_Rattler",
+	"Tardigrade":        "Kill_Tardigrade",
+	"GrappleSnake":      "Futile_White",
+	"Millipede":         "Futile_White",
+	"Angler":            "Kill_Angler",
+	"MothGrub":          "Kill_MothGrub"
 };
 
 /**
@@ -4048,7 +4484,34 @@ const creatureNameToIconColorMap = {
 	"Inspector":       "#72e6c4",
 	"Yeek":            "#e6e6e6",
 	"BigJelly":        "#ffd9b3",
-	"Default":         "#a9a4b2"
+	"Default":         "#a9a4b2",
+
+	"Barnacle":          "#a9a4b2",
+	"DrillCrab":         "#a9a4b2",
+	"TowerCrab":         "#51382e",
+	"BigMoth":           "#ffffff",
+	"SmallMoth":         "#a9a4b2",
+	"BoxWorm":           "#00e8e6",
+	"FireSprite":        "#00e8e6",
+	"AltSkyWhale":       "#807359",
+	"SkyWhale":          "#ffffff",
+	"Frog":              "#ad4436",
+	"Rat":               "#ad4436",
+	"Rattler":           "#4c00ff",
+	"RotLoach":          "#4c00ff",
+	"ScavengerTemplar":  "#ffcc4c",
+	"ScavengerDisciple": "#ffcc4c",
+	"BlizzardLizard":    "#8c99b3",
+	"BasiliskLizard":    "#b34c00",
+	"IndigoLizard":      "#4c00cc",
+	"PeachLizard":       "#ff7883",
+	"ProtoLizard":       "#4c00cc",
+	"Tardigrade":        "#00e8e6",
+	"GrappleSnake":      "#a9a4b2",
+	"Millipede":         "#ffeb04",
+	"Angler":            "#a9a4b2",
+	"MothGrub":          "#ffb38c",
+	"lizardBreedTemplate": "#00a86b"
 };
 
 /**
@@ -4113,7 +4576,22 @@ const itemNameToDisplayTextMap = {
 	"Seed":             "Popcorn Seeds",
 	"Default":          "Unknown Items",
 	"SeedCob":          "Popcorn Plants",	//	(Watcher 1.5) not exactly an item, but it goes in the unlocks all the same
-	"ExplosiveSpear":   "Explosive Spears"	//	for redundancy
+	"ExplosiveSpear":   "Explosive Spears",	//	for redundancy
+
+	"RotFruit":        "Rot Fruit",
+	"Rotcorn":         "Rot Popcorn",
+	"Pomegranate":     "Pomegranates",
+	"Boomerang":       "Boomerangs",
+	"GraffitiBomb":    "Graffiti Bombs",
+	"FireSpriteLarva": "Fire Sprite Larvae",
+	"SoftToy":         "Squish Toy",
+	"BallToy":         "Ball Toy",
+	"SpinToy":         "Spinning Toy",
+	"WeirdToy":        "Weird Toy",
+	"RippleSpawn":     "RippleSpawn",
+	"PrinceBulb":      "PrinceBulb",
+	"Prince":          "Prince",
+	"KnotSpawn":       "KnotSpawn"
 };
 
 /**
@@ -4172,7 +4650,22 @@ const itemNameToIconAtlasMap = {
 	"Pearl":            "Symbol_Pearl",
 	"KarmaFlower":      "FlowerMarker",
 	"SeedCob":          "popcorn_plant",
-	"ExplosiveSpear":   "Symbol_FireSpear"
+	"ExplosiveSpear":   "Symbol_FireSpear",
+
+	"RotFruit":        "Symbol_RotFruit",
+	"Rotcorn":         "Symbol_RotcornPlant",
+	"Pomegranate":     "Symbol_Pomegranate",
+	"Boomerang":       "Symbol_Boomerang",
+	"GraffitiBomb":    "Symbol_GraffitiBomb",
+	"FireSpriteLarva": "Symbol_FireSpriteLarva",
+	"SoftToy":         "Symbol_SoftToy",
+	"BallToy":         "Symbol_BallToy",
+	"SpinToy":         "Symbol_SpinToy",
+	"WeirdToy":        "Symbol_WeirdToy",
+	"RippleSpawn":     "Futile_White",
+	"PrinceBulb":      "Futile_White",
+	"Prince":          "Futile_White",
+	"KnotSpawn":       "Futile_White"
 };
 
 /**
@@ -4221,7 +4714,26 @@ const DataPearlList = [
 	"LC_second",
 	"CL",
 	"VS",
-	"BroadcastMisc"
+	"BroadcastMisc",
+	
+	"Default",
+	"WARG_AUDIO_GROOVE",
+	"WSKD_AUDIO_JAM2",
+	"WSKC_ABSTRACT",
+	"WBLA_AUDIO_VOICEWIND1",
+	"WARD_TEXT_STARDUST",
+	"WARE_AUDIO_VOICEWIND2",
+	"WARB_TEXT_SECRET",
+	"WARC_TEXT_CONTEMPT",
+	"WPTA_DRONE",
+	"WRFB_AUDIO_JAM4",
+	"WTDA_AUDIO_JAM1",
+	"WTDB_AUDIO_JAM3",
+	"WVWA_TEXT_KITESDAY",
+	"WMPA_TEXT_NOTIONOFSELF",
+	"WORA_WORA",
+	"WAUA_WAUA",
+	"WAUA_TEXT_AUDIO_TALKSHOW"
 ];
 
 /**
@@ -4267,7 +4779,26 @@ const dataPearlToDisplayTextMap = {
 	"BroadcastMisc":    "Broadcast",
 	"Misc":             "Misc",
 	"Misc2":            "Misc 2",
-	"PebblesPearl":     "Active Processes"
+	"PebblesPearl":     "Active Processes",
+
+	"Default":          "Unknown",
+	"WARG_AUDIO_GROOVE":        "Pink Audio",
+	"WSKD_AUDIO_JAM2":          "Gold Audio",
+	"WSKC_ABSTRACT":            "Dark Teal",
+	"WBLA_AUDIO_VOICEWIND1":    "Deep Magenta Audio",
+	"WARD_TEXT_STARDUST":       "Bright Viridian",
+	"WARE_AUDIO_VOICEWIND2":    "Brown Audio",
+	"WARB_TEXT_SECRET":         "Dark Purple",
+	"WARC_TEXT_CONTEMPT":       "Pale Pink",
+	"WPTA_DRONE":               "Beige",
+	"WRFB_AUDIO_JAM4":          "Bright Magenta Audio",
+	"WTDA_AUDIO_JAM1":          "Green Audio",
+	"WTDB_AUDIO_JAM3":          "Viridian Audio",
+	"WVWA_TEXT_KITESDAY":       "Amber",
+	"WMPA_TEXT_NOTIONOFSELF":   "Pale Viridian",
+	"WORA_WORA":                "Light Green",
+	"WAUA_WAUA":                "Orange",
+	"WAUA_TEXT_AUDIO_TALKSHOW": "Light Magenta"
 };
 
 /**
@@ -4312,7 +4843,26 @@ const dataPearlToRegionMap = {
 	"PebblesPearl":     "UNKNOWN",
 	"Red_stomach":      "UNKNOWN",
 	"Rivulet_stomach":  "UNKNOWN",
-	"Spearmasterpearl": "UNKNOWN"
+	"Spearmasterpearl": "UNKNOWN",
+
+	"Default":          "UNKNOWN",
+	"WARG_AUDIO_GROOVE":        "WARG",
+	"WSKD_AUDIO_JAM2":          "WSKD",
+	"WSKC_ABSTRACT":            "WSKC",
+	"WBLA_AUDIO_VOICEWIND1":    "WBLA",
+	"WARD_TEXT_STARDUST":       "WARD",
+	"WARE_AUDIO_VOICEWIND2":    "WARE",
+	"WARB_TEXT_SECRET":         "WARB",
+	"WARC_TEXT_CONTEMPT":       "WARC",
+	"WPTA_DRONE":               "WPTA",
+	"WRFB_AUDIO_JAM4":          "WRFB",
+	"WTDA_AUDIO_JAM1":          "WTDA",
+	"WTDB_AUDIO_JAM3":          "WTDB",
+	"WVWA_TEXT_KITESDAY":       "WVWA",
+	"WMPA_TEXT_NOTIONOFSELF":   "WMPA",
+	"WORA_WORA":                "WORA",
+	"WAUA_WAUA":                "WAUA",
+	"WAUA_TEXT_AUDIO_TALKSHOW": "WAUA"
 };
 
 /**
@@ -4355,7 +4905,26 @@ const dataPearlToColorMap = {
 	"LC_second":        "#c26600",
 	"CL":               "#bd48ff",
 	"VS":               "#c30cf5",
-	"BroadcastMisc":    "#e9c6d2"
+	"BroadcastMisc":    "#e9c6d2",
+
+	"Default":             "#bebebe",
+	"WAUA_WAUA":                "#f2331a",
+	"WORA_WORA":                "#8fd647",
+	"WPTA_DRONE":               "#e6b380",
+	"WSKC_ABSTRACT":            "#007373",
+	"WAUA_TEXT_AUDIO_TALKSHOW": "#cc14a6",
+	"WARD_TEXT_STARDUST":       "#59e6a6",
+	"WMPA_TEXT_NOTIONOFSELF":   "#66bf66",
+	"WVWA_TEXT_KITESDAY":       "#f2a605",
+	"WARB_TEXT_SECRET":         "#803399",
+	"WARC_TEXT_CONTEMPT":       "#bd7a8a",
+	"WTDA_AUDIO_JAM1":          "#6c40f2",
+	"WSKD_AUDIO_JAM2":          "#7249ed",
+	"WTDB_AUDIO_JAM3":          "#7249ed",
+	"WRFB_AUDIO_JAM4":          "#6636f7",
+	"WARG_AUDIO_GROOVE":        "#7045ef",
+	"WBLA_AUDIO_VOICEWIND1":    "#762dcb",
+	"WARE_AUDIO_VOICEWIND2":    "#7934c9"
 };
 
 /**
@@ -4441,7 +5010,22 @@ const itemNameToIconColorMap = {
 	"Pearl_LC_second":        "#c26600",
 	"Pearl_CL":               "#bd48ff",
 	"Pearl_VS":               "#c30cf5",
-	"Pearl_BroadcastMisc":    "#e9c6d2"
+	"Pearl_BroadcastMisc":    "#e9c6d2",
+
+	"RotFruit":        "#4c00ff",
+	"Rotcorn":         "#ae281e",
+	"Pomegranate":     "#0eb23c",
+	"Boomerang":       "#a9a4b2",
+	"GraffitiBomb":    "#9966ff",
+	"FireSpriteLarva": "#a9a4b2",
+	"SoftToy":         "#ff00ff",
+	"BallToy":         "#ff9898",
+	"SpinToy":         "#807359",
+	"WeirdToy":        "#ad4436",
+	"RippleSpawn":     "#a9a4b2",
+	"PrinceBulb":      "#a9a4b2",
+	"Prince":          "#a9a4b2",
+	"KnotSpawn":       "#a9a4b2"
 };
 
 
@@ -4472,7 +5056,8 @@ export const BingoEnum_CharToDisplayText = {
 	"Spear":      "Spearmaster",
 	"Saint":      "Saint",
 	"Sofanthiel": "Inv",
-	"Night":      "Nightcat"
+	"Night":      "Nightcat",
+	"Watcher":    "Watcher"
 };
 
 /**
@@ -4507,7 +5092,13 @@ const BingoEnum_EXPFLAGS = {
 	"PURSUED":   0x00080000,
 	"AURA":      0x00100000,
 	"LOCKOUT":   0x00200000,
-	"BLACKOUT":  0x00400000
+	"BLACKOUT":  0x00400000,
+
+	"WA_CAMO":   8388608,
+	"WA_RANG":   16777216,
+	"WA_POISON": 33554432,
+	"WA_WARP":   67108864,
+	"WA_ROTTED": 134217728,
 };
 
 const BingoEnum_EXPFLAGSNames = {
@@ -4533,7 +5124,13 @@ const BingoEnum_EXPFLAGSNames = {
 	"PURSUED":   "Burden: Pursued",
 	"AURA":      "Aura Enabled",
 	"LOCKOUT":   "Gameplay: Lockout",
-	"BLACKOUT":  "Gameplay: Blackout"
+	"BLACKOUT":  "Gameplay: Blackout",
+
+	"WA_CAMO": "Perk: Camouflage",
+	"WA_RANG": "Perk: Permanent Warps",
+	"WA_POISON": "Perk: Poison Spear",
+	"WA_WARP":   "Perk: Boomerang Fever",
+	"WA_ROTTED": "Burden: Rotten",
 };
 
 /** Perk and burden group names; see: Expedition.ExpeditionProgression */
@@ -4557,7 +5154,13 @@ const BingoEnum_EXPFLAGS_Groups = {
 	"BLINDED":   "bur-blinded",
 	"DOOMED":    "bur-doomed",
 	"HUNTED":    "bur-hunted",
-	"PURSUED":   "bur-pursued"
+	"PURSUED":   "bur-pursued",
+
+	"WA_CAMO": "unl-watcher-camo",
+	"WA_RANG": "unl-watcher-permwarp",
+	"WA_POISON": "unl-watcher-PoisonSpear",
+	"WA_WARP":   "unl-watcher-boomerang",
+	"WA_ROTTED": "bur-watcher_rot"
 };
 
 /**
@@ -4690,7 +5293,77 @@ const BingoEnum_VistaPoints = [
 	{ region: "SU", room: "SU_B11",         x:  770, y:   48  },
 	{ region: "UG", room: "UG_A19",         x:  545, y:   43  },
 	{ region: "UW", room: "UW_D05",         x:  760, y:  220  },
-	{ region: "VS", room: "VS_E06",         x:  298, y: 1421  }
+	{ region: "VS", room: "VS_E06",         x:  298, y: 1421  },
+
+	{ region: "WARF", room: "WARF_B17", x:  461, y:  290 },
+	{ region: "WARF", room: "WARF_C02", x: 2110, y:  330 },
+	{ region: "WARF", room: "WARF_D26", x:  600, y:  100 },
+	{ region: "WBLA", room: "WBLA_F02", x: 5180, y:  700 },
+	{ region: "WBLA", room: "WBLA_B05", x: 1650, y:  490 },
+	{ region: "WBLA", room: "WBLA_J01", x: 4853, y:  650 },
+	{ region: "WARD", room: "WARD_D36", x:  590, y:  570 },
+	{ region: "WARD", room: "WARD_E26", x: 1300, y:  590 },
+	{ region: "WARD", room: "WARD_E28", x:  590, y:  290 },
+	{ region: "WRFA", room: "WRFA_F06", x: 1290, y: 1525 },
+	{ region: "WRFA", room: "WRFA_E02", x: 1488, y:  300 },
+	{ region: "WRFA", room: "WRFA_SK0", x:   25, y:  250 },
+	{ region: "WTDB", room: "WTDB_A08", x:  475, y:  634 },
+	{ region: "WTDB", room: "WTDB_A22", x: 1545, y:  660 },
+	{ region: "WTDB", room: "WTDB_A38", x:  950, y:  610 },
+	{ region: "WARC", room: "WARC_A01", x:  905, y:  550 },
+	{ region: "WARC", room: "WARC_A05", x: 2450, y:  570 },
+	{ region: "WARC", room: "WARC_E03", x: 1511, y:  970 },
+	{ region: "WVWB", room: "WVWB_C01", x: 2460, y:  440 },
+	{ region: "WVWB", room: "WVWB_D02", x: 1315, y:  410 },
+	{ region: "WVWB", room: "WVWB_E02", x: 1559, y:  870 },
+	{ region: "WARE", room: "WARE_H03", x:  434, y:  625 },
+	{ region: "WARE", room: "WARE_H24", x:  475, y: 1095 },
+	{ region: "WARE", room: "WARE_I04", x:  715, y:  100 },
+	{ region: "WMPA", room: "WMPA_D07", x:  705, y:  935 },
+	{ region: "WMPA", room: "WMPA_A08", x: 1265, y:  450 },
+	{ region: "WMPA", room: "WMPA_C03", x: 1111, y:  570 },
+	{ region: "WPGA", room: "WPGA_A09", x:  150, y:  400 },
+	{ region: "WPGA", room: "WPGA_A14", x:  491, y:  630 },
+	{ region: "WPGA", room: "WPGA_A13", x:  733, y:  645 },
+	{ region: "WRRA", room: "WRRA_A09", x:  492, y:  328 },
+	{ region: "WRRA", room: "WRRA_C03", x: 1472, y:  348 },
+	{ region: "WRRA", room: "WRRA_B13", x:  471, y:  290 },
+	{ region: "WARB", room: "WARB_F05", x: 3590, y:  510 },
+	{ region: "WARB", room: "WARB_G26", x:  490, y: 1000 },
+	{ region: "WARB", room: "WARB_F16", x:  860, y:  285 },
+	{ region: "WSKD", room: "WSKD_B33", x: 2543, y: 1000 },
+	{ region: "WSKD", room: "WSKD_B09", x:  610, y:  450 },
+	{ region: "WSKD", room: "WSKD_B20", x: 1650, y:  330 },
+	{ region: "WPTA", room: "WPTA_B04", x:  390, y:  210 },
+	{ region: "WPTA", room: "WPTA_C02", x:  958, y: 2235 },
+	{ region: "WPTA", room: "WPTA_B08", x:   85, y:  290 },
+	{ region: "WSKC", room: "WSKC_A12", x: 1701, y:  430 },
+	{ region: "WSKC", room: "WSKC_A08", x:  131, y:  110 },
+	{ region: "WSKC", room: "WSKC_A27", x:  110, y:  185 },
+	{ region: "WSKB", room: "WSKB_N09", x:  515, y:  510 },
+	{ region: "WSKB", room: "WSKB_C11", x:  480, y:  500 },
+	{ region: "WSKB", room: "WSKB_N11", x:  853, y:   63 },
+	{ region: "WARG", room: "WARG_W08", x:  460, y:  545 },
+	{ region: "WARG", room: "WARG_O05_Future", x:  950, y:  285 },
+	{ region: "WARG", room: "WARG_G19", x:  585, y:  490 },
+	{ region: "WSKA", room: "WSKA_D15", x: 1515, y:  830 },
+	{ region: "WSKA", room: "WSKA_D20", x:  355, y:  530 },
+	{ region: "WSKA", room: "WSKA_D11", x: 2631, y:  630 },
+	{ region: "WTDA", room: "WTDA_B08", x: 6791, y:  470 },
+	{ region: "WTDA", room: "WTDA_Z16", x: 3759, y:  308 },
+	{ region: "WTDA", room: "WTDA_Z01", x: 1650, y:  625 },
+	{ region: "WRFB", room: "WRFB_B01", x:  489, y:  110 },
+	{ region: "WRFB", room: "WRFB_D01", x:  900, y:  191 },
+	{ region: "WRFB", room: "WRFB_F04", x:  610, y:    5 },
+	{ region: "WVWA", room: "WVWA_B08", x:  950, y:   -7 },
+	{ region: "WVWA", room: "WVWA_B06", x:  702, y:  490 },
+	{ region: "WVWA", room: "WVWA_B10", x: 1443, y:  170 },
+	{ region: "WARA", room: "WARA_P09", x:  311, y: 2170 },
+	{ region: "WARA", room: "WARA_P21", x: 1350, y:   90 },
+	{ region: "WARA", room: "WARA_P06", x:  430, y:  155 },
+	{ region: "WAUA", room: "WAUA_A03B", x:  491, y:  420 },
+	{ region: "WAUA", room: "WAUA_SHOP", x: 1020, y:  450 },
+	{ region: "WAUA", room: "WAUA_E02", x: 1450, y:  320 }
 ];
 
 /**
