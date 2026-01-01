@@ -1209,7 +1209,7 @@ export const CHALLENGES = {
 			category: "Entering regions while never visiting one",
 			items: [items[2], "To do", "Progress", "Total"],
 			values: [items[1], desc[1], String(current), String(required)],
-			description: "Enter " + String(required - current) + " regions that are not " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
+			description: "Enter " + required + " regions that are not " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
 			comments: "This challenge is potentially quite customizable; only regions in the list need to be entered. Normally, the list is populated with all campaign story regions (i.e. corresponding Wanderer pips), so that progress can be checked on the sheltering screen. All that matters towards completion, is Progress equaling Total; thus we can set a lower bar and play a \"The Wanderer\"-lite; or we could set a specific collection of regions to enter, to entice players towards them. Downside: the latter functionality is not currently supported in-game: the region list is something of a mystery unless viewed and manually tracked. (This goal generates with all regions listed, so that all will contribute towards the goal.)",
 			paint: [
 				{ type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
