@@ -2039,6 +2039,44 @@ export const CHALLENGES = {
 	},
 	BingoKarmaFlowerChallenge: function(desc) {
 		const thisname = "BingoKarmaFlowerChallenge";
+		if (desc.length !== 4) {
+			// Watcher
+			checkDescLen(thisname, desc.length, 8);
+			var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "item count");
+			var amt = parseInt(items[1]), am = parseInt(desc[3]);
+			if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "regions"], "region");
+			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
+			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+			var p = [];
+			p.push({ type: "icon", value: "foodSymbol", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			p.push({ type: "icon", value: "FlowerMarker", scale: 1, color: RainWorldColors.SaturatedGold, rotation: 0 });
+			if (diffRegionItems[1] === "true")
+				p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push({ type: "break" });
+			if (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false") {
+				p.push({ type: "text", value: regionItems[1], color: RainWorldColors.Unity_white });
+				p.push({ type: "break" });
+			}
+			p.push({ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white });
+			if (oneCycleItems[1] === "true")
+				p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			var b = Array(5); b.fill(0);
+			b[0] = challengeValue(thisname);
+			applyShort(b, 3, amt);
+			b[2] = b.length - GOAL_LENGTH;
+			return {
+				name: thisname,
+				category: "Consuming Karma Flowers",
+				items: [items[2]],
+				values: [String(amt)],
+				description: "Consume " + entityNameQuantify(amt, "Karma Flowers") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+				comments: "With this goal present on the board, flowers are spawned in the world in their normal locations. The player obtains the benefit of consuming the flower (protecting karma level). While the goal is in progress, players <em>do not drop</em> the flower on death. After the goal is completed or locked, a flower can drop on death as normal.",
+				paint: p,
+				toBin: new Uint8Array(b)
+			};
+		}
 		//	assert: desc of format ["0", "System.Int32|5|Amount|0|NULL", "0", "0"]
 		checkDescLen(thisname, desc.length, 4);
 		var items = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "item count");
@@ -2473,6 +2511,44 @@ export const CHALLENGES = {
 	},
 	BingoPopcornChallenge: function(desc) {
 		const thisname = "BingoPopcornChallenge";
+		if (desc.length !== 4) {
+			// Watcher
+			checkDescLen(thisname, desc.length, 8);
+			var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "item count");
+			var amt = parseInt(items[1]), am = parseInt(desc[3]);
+			if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "popcornRegions"], "region");
+			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
+			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+			var p = [];
+			p.push({ type: "icon", value: "Symbol_Spear", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			p.push({ type: "icon", value: "popcorn_plant", scale: 1, color: RainWorldColors.popcorn_plant, rotation: 0 });
+			if (diffRegionItems[1] === "true")
+				p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push({ type: "break" });
+			if (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false") {
+				p.push({ type: "text", value: regionItems[1], color: RainWorldColors.Unity_white });
+				p.push({ type: "break" });
+			}
+			p.push({ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white });
+			if (oneCycleItems[1] === "true")
+				p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			var b = Array(5); b.fill(0);
+			b[0] = challengeValue(thisname);
+			applyShort(b, 3, amt);
+			b[2] = b.length - GOAL_LENGTH;
+			return {
+				name: thisname,
+				category: "Popping popcorn plants",
+				items: [items[2]],
+				values: [String(amt)],
+				description: "Open " + entityNameQuantify(amt, "popcorn plants") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+				comments: "",
+				paint: p,
+				toBin: new Uint8Array(b)
+			};
+		}
 		//	desc of format ["0", "System.Int32|6|Amount|0|NULL", "0", "0"]
 		checkDescLen(thisname, desc.length, 4);
 		var items = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "pop amount");
@@ -3260,34 +3336,36 @@ export const CHALLENGES = {
 	},
 	WatcherBingoOpenMelonsChallenge: function(desc) {
 		const thisname = "WatcherBingoOpenMelonsChallenge";
-		//	desc of format ["0", "System.Int32|3|Amount|1|NULL", "System.Boolean|true|In one Cycle|0|NULL", "0", "0"]
-		checkDescLen(thisname, desc.length, 5);
-		var amounts = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "melon count");
-		var amt = parseInt(amounts[1]), am = parseInt(desc[0]);
-		amt = Math.min(amt, CHAR_MAX);
-		if (isNaN(amt) || amt < 1)
-			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
-		var items = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
-		if (items[1] !== "true" && items[1] !== "false")
-			throw new TypeError(thisname + ": flag \"" + items[1] + "\" not 'true' or 'false'");
-		var p = [
-			{ type: "icon", value: entityIconAtlas("Pomegranate"), scale: 1, color: entityIconColor("Pomegranate"), rotation: 0 },
-			{ type: "break" },
-			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
-		];
-		if (items[1] === "true")
-			p.splice(1, 0, { type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
-		var b = Array(4); b.fill(0);
+		checkDescLen(thisname, desc.length, 8);	
+		var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "melon count");
+		var amt = parseInt(items[1]), am = parseInt(desc[3]);
+		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+			throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+		var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "Wpoms"], "region");
+		var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
+		var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+		var p = [];
+		p.push({ type: "icon", value: entityIconAtlas("Pomegranate"), scale: 1, color: entityIconColor("Pomegranate"), rotation: 0 });
+		if (diffRegionItems[1] === "true")
+			p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		p.push({ type: "break" });
+		if (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false") {
+			p.push({ type: "text", value: regionItems[1], color: RainWorldColors.Unity_white });
+			p.push({ type: "break" });
+		}
+		p.push({ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white });
+		if (oneCycleItems[1] === "true")
+			p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+		var b = Array(5); b.fill(0);
 		b[0] = challengeValue(thisname);
-		b[3] = amt;
-		applyBool(b, 1, 4, items[1]);
+		applyShort(b, 3, amt);
 		b[2] = b.length - GOAL_LENGTH;
 		return {
 			name: thisname,
 			category: "Open Pomegranates/Melons",
-			items: [amounts[2], items[2]],
-			values: [amounts[1], items[1]],
-			description: "Open " + entityNameQuantify(amt, "Pomegranates") + ((items[1] === "true") ? " in one cycle." : "."),
+			items: [items[2]],
+			values: [String(amt)],
+			description: "Open " + entityNameQuantify(amt, "Pomegranates") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
 			comments: "Open hanging pomegranates/melons found in various regions. They can be opened by jumping and grabbing onto them with enough speed.",
 			paint: p,
 			toBin: new Uint8Array(b)
@@ -3348,6 +3426,29 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "icon", value: "prince", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
+			],
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoWeaverChallenge: function(desc) {
+		const thisname = "WatcherBingoWeaverChallenge";
+		//	desc of format ["WRFA", "System.String|WRFA_A07|Portal Room|0|WweaverRooms", "0", "0"]
+		checkDescLen(thisname, desc.length, 4);
+		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Portal Room", , "WweaverRooms"], "item selection");
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Encountering the Weaver",
+			items: [],
+			values: [],
+			description: "Find the sealed portal in " + desc[0] + " and then encounter the Weaver.",
+			comments: "",
+			paint: [
+				{ type: "icon", value: "weaver", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "break" },
+				{ type: "text", value: desc[0], color: RainWorldColors.Unity_white }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -3965,8 +4066,11 @@ const BingoEnum_BombedDict = [
 	"SB_TOPSIDE|True",
 
 	"warf_g01|0,1",
+	"warf_g01|1,1",
 	"wbla_f01|0,1",
+	"wbla_f01|1,1",
 	"wskd_b41|0,1",
+	"wskd_b41|1,1",
 ];
 
 /**

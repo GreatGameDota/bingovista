@@ -42,7 +42,7 @@
 },
 "bingolock.png":
 {
-	"frame": {"x":80,"y":195,"w":40,"h":40},
+	"frame": {"x":0,"y":234,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -98,7 +98,7 @@
 },
 "echo_icon.png":
 {
-	"frame": {"x":63,"y":195,"w":17,"h":39},
+	"frame": {"x":80,"y":195,"w":17,"h":39},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":39},
@@ -114,7 +114,7 @@
 },
 "gourmcrush.png":
 {
-	"frame": {"x":17,"y":279,"w":40,"h":50},
+	"frame": {"x":44,"y":274,"w":40,"h":50},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":50},
@@ -122,7 +122,7 @@
 },
 "leviathan_dodge.png":
 {
-	"frame": {"x":57,"y":279,"w":40,"h":66},
+	"frame": {"x":84,"y":274,"w":40,"h":66},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":66},
@@ -194,15 +194,15 @@
 },
 "popcorn_plant.png":
 {
-	"frame": {"x":0,"y":279,"w":17,"h":45},
+	"frame": {"x":63,"y":195,"w":17,"h":38},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":45},
-	"sourceSize": {"w":17,"h":45}
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":38},
+	"sourceSize": {"w":17,"h":38}
 },
 "portal.png":
 {
-	"frame": {"x":0,"y":235,"w":40,"h":40},
+	"frame": {"x":40,"y":234,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -210,7 +210,7 @@
 },
 "prince.png":
 {
-	"frame": {"x":40,"y":235,"w":40,"h":40},
+	"frame": {"x":80,"y":234,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -258,7 +258,7 @@
 },
 "slugtarget.png":
 {
-	"frame": {"x":80,"y":235,"w":44,"h":44},
+	"frame": {"x":0,"y":274,"w":44,"h":44},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":44},
@@ -349,8 +349,8 @@
 	"version": "1.0",
 	"image": "bingoicons.png",
 	"format": "RGBA8888",
-	"size": {"w":124,"h":345},
+	"size": {"w":124,"h":340},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:98f527792cbf1cf3c36861c8a4042b3a:9feef173b595f5f2452cfb516a38d816:d92a9b375d8d95719e46004c5401ddab$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ca1a27eb22d577ccef2e8f3e6b9ed8fc:f4b98f3fc6847661c87e5316c02361fd:d92a9b375d8d95719e46004c5401ddab$"
 }
 }
