@@ -3430,7 +3430,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	WatcherBingoWeaverChallenge: function(desc) {
+	WatcherBingoWeaverChallenge: function(desc, _board) {
 		const thisname = "WatcherBingoWeaverChallenge";
 		//	desc of format ["WRFA", "System.String|WRFA_A07|Portal Room|0|WweaverRooms", "0", "0"]
 		checkDescLen(thisname, desc.length, 4);
@@ -3443,7 +3443,7 @@ export const CHALLENGES = {
 			category: "Encountering the Weaver",
 			items: [],
 			values: [],
-			description: "Find the sealed portal in " + desc[0] + " and then encounter the Weaver.",
+			description: "Find the sealed portal in " + regionToDisplayText(_board.character, desc[0], "Any Subregion") + " and then encounter the Weaver.",
 			comments: "",
 			paint: [
 				{ type: "icon", value: "weaver", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
