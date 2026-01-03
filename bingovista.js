@@ -1892,8 +1892,46 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoHatchNoodleChallenge: function(desc) {
+	BingoHatchNoodleChallenge: function(desc, _board) {
 		const thisname = "BingoHatchNoodleChallenge";
+		if (desc.length !== 4) {
+			// Watcher
+			checkDescLen(thisname, desc.length, 8);
+			var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "item count");
+			var amt = parseInt(items[1]), am = parseInt(desc[3]);
+			if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "regions"], "region");
+			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
+			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "At once", , "NULL"], "one-cycle flag");
+			var p = [];
+			p.push({ type: "icon", value: entityIconAtlas("NeedleEgg"), scale: 1, color: entityIconColor("NeedleEgg"), rotation: 0 });
+			p.push({ type: "icon", value: entityIconAtlas("SmallNeedleWorm"), scale: 1, color: entityIconColor("SmallNeedleWorm"), rotation: 0 });
+			if (diffRegionItems[1] === "true")
+				p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push({ type: "break" });
+			if (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false") {
+				p.push({ type: "text", value: regionItems[1], color: RainWorldColors.Unity_white });
+				p.push({ type: "break" });
+			}
+			p.push({ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white });
+			if (oneCycleItems[1] === "true")
+				p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			var b = Array(5); b.fill(0);
+			b[0] = challengeValue(thisname);
+			applyShort(b, 3, amt);
+			b[2] = b.length - GOAL_LENGTH;
+			return {
+				name: thisname,
+				category: "Hatching noodlefly eggs",
+				items: [items[2]],
+				values: [String(amt)],
+				description: "Hatch " + entityNameQuantify(amt, entityDisplayText("NeedleEgg")) + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionToDisplayText(_board.character, regionItems[1], "Any Subregion") : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+				comments: "Eggs must be hatched where the player is sheltering. Eggs stored in other shelters disappear and do not give credit towards this goal.",
+				paint: p,
+				toBin: new Uint8Array(b)
+			};
+		}
 		//	desc of format ["0", "System.Int32|3|Amount|1|NULL", "System.Boolean|true|At Once|0|NULL", "0", "0"]
 		checkDescLen(thisname, desc.length, 5);
 		var amounts = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "egg count");
@@ -2037,7 +2075,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoKarmaFlowerChallenge: function(desc) {
+	BingoKarmaFlowerChallenge: function(desc, _board) {
 		const thisname = "BingoKarmaFlowerChallenge";
 		if (desc.length !== 4) {
 			// Watcher
@@ -2071,7 +2109,7 @@ export const CHALLENGES = {
 				category: "Consuming Karma Flowers",
 				items: [items[2]],
 				values: [String(amt)],
-				description: "Consume " + entityNameQuantify(amt, "Karma Flowers") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+				description: "Consume " + entityNameQuantify(amt, "Karma Flowers") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionToDisplayText(_board.character, regionItems[1], "Any Subregion") : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
 				comments: "With this goal present on the board, flowers are spawned in the world in their normal locations. The player obtains the benefit of consuming the flower (protecting karma level). While the goal is in progress, players <em>do not drop</em> the flower on death. After the goal is completed or locked, a flower can drop on death as normal.",
 				paint: p,
 				toBin: new Uint8Array(b)
@@ -2509,7 +2547,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	BingoPopcornChallenge: function(desc) {
+	BingoPopcornChallenge: function(desc, _board) {
 		const thisname = "BingoPopcornChallenge";
 		if (desc.length !== 4) {
 			// Watcher
@@ -2543,7 +2581,7 @@ export const CHALLENGES = {
 				category: "Popping popcorn plants",
 				items: [items[2]],
 				values: [String(amt)],
-				description: "Open " + entityNameQuantify(amt, "popcorn plants") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+				description: "Open " + entityNameQuantify(amt, "popcorn plants") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionToDisplayText(_board.character, regionItems[1], "Any Subregion") : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
 				comments: "",
 				paint: p,
 				toBin: new Uint8Array(b)
@@ -3334,7 +3372,7 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
-	WatcherBingoOpenMelonsChallenge: function(desc) {
+	WatcherBingoOpenMelonsChallenge: function(desc, _board) {
 		const thisname = "WatcherBingoOpenMelonsChallenge";
 		checkDescLen(thisname, desc.length, 8);	
 		var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "melon count");
@@ -3365,7 +3403,7 @@ export const CHALLENGES = {
 			category: "Open Pomegranates/Melons",
 			items: [items[2]],
 			values: [String(amt)],
-			description: "Open " + entityNameQuantify(amt, "Pomegranates") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionItems[1] : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
+			description: "Open " + entityNameQuantify(amt, "Pomegranates") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionToDisplayText(_board.character, regionItems[1], "Any Subregion") : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") +  (oneCycleItems[1] === "true" ? " in one cycle" : "") + ".",
 			comments: "Open hanging pomegranates/melons found in various regions. They can be opened by jumping and grabbing onto them with enough speed.",
 			paint: p,
 			toBin: new Uint8Array(b)
