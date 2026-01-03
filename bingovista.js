@@ -4404,7 +4404,7 @@ const creatureNameToDisplayTextMap = {
 	"SlugNPC":         "Slugpups",
 	"Default":         "Unknown Creatures",
 
-	"AltSkyWhale":       "Rot Sky Whales",
+	"AltSkyWhale":       "Locust Whales",
 	"Angler":            "Anglers",
 	"Barnacle":          "Barnacles",
 	"BasiliskLizard":    "Basilisk Lizards",
