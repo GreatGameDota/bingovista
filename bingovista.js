@@ -2769,17 +2769,67 @@ export const CHALLENGES = {
 			desc.splice(2, 0, "0", "System.Int32|1|Amount|3|NULL");
 			desc.push("");
 		}
+
+		if (desc.length !== 7)
+		{
+			// Watcher
+			checkDescLen(thisname, desc.length, 8);
+			var v = [], i = [];
+			var items = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific Creature Type", , "NULL"], "creature type flag"); v.push(items[1]); i.push(items[2]);
+			// Normalize legacy formatter token "Wfriend" -> "friend" in desc[1]
+			if (typeof desc[1] === "string") {
+				var parts = desc[1].split("|");
+				if (parts.length > 0 && parts[parts.length - 1] === "Wfriend") {
+					parts[parts.length - 1] = "friend";
+					desc[1] = parts.join("|");
+				}
+			}
+			items = checkSettingBox(thisname, desc[1], ["System.String", , "Creature Type", , "friend"], "friend selection"); v.push(items[1]); i.push(items[2]);
+			items = checkSettingBox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "friend count"); v.push(items[1]); i.push(items[2]);
+			var amt = parseInt(v[2]), am = parseInt(desc[2]);
+			amt = Math.min(amt, CHAR_MAX);
+			if (isNaN(amt) || amt < 1)
+				throw new TypeError(thisname + ": amount \"" + v[2] + "\" not a number or out of range");
+			if (v[1] !== "Any Creature" && creatureNameToDisplayTextMap[v[1]] === undefined)
+				throw new TypeError(thisname + ": \"" + v[1] + "\" not found in creatures");
+			var c = entityNameQuantify(1, entityDisplayText(v[1]));
+			var p = [
+				{ type: "icon", value: "FriendB", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
+			];
+			if (v[0] === "true") {
+				p.push( { type: "icon", value: entityIconAtlas(v[1]), scale: 1, color: entityIconColor(v[1]), rotation: 0 } );
+			} else if (v[0] === "false") {
+			} else {
+				throw new TypeError(thisname + ": flag \"" + v[0] + "\" not 'true' or 'false'");
+			}
+			p.push( { type: "break" } );
+			p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white } );
+			var b = Array(4); b.fill(0);
+			//	start with classic version...
+			b[0] = challengeValue(thisname);
+			b[3] = enumToValue(v[1], "friend");
+			if (v[0] === "false") {
+				//	...have to use expanded form
+				b[0] = challengeValue("BingoTameExChallenge");
+				applyBool(b, 1, 4, v[0]);
+				b.push(amt);
+			}
+			b[2] = b.length - GOAL_LENGTH;
+			return {
+				name: thisname,
+				category: "Befriending creatures",
+				items: i,
+				values: v,
+				description: (v[0] === "true") ? ("Befriend " + entityNameQuantify(amt, entityDisplayText(v[1])) + ".") : ("Befriend [0/" + amt + "] unique creatures."),
+				comments: "Taming occurs when a creature has been fed or rescued enough times to increase the player's reputation above some threshold, starting from a default depending on species, and the global and regional reputation of the player.<br>Feeding occurs when: 1. the player drops an edible item, creature or corpse, 2. within view of the creature, and 3. the creature bites that object. A \"happy lizard\" sound indicates success. The creature does not need to den with the item to increase reputation. Stealing the object back from the creature's jaws does not reduce reputation.<br>A rescue occurs when: 1. a creature sees or is grabbed by a threat, 2. the player attacks the threat (if the creatures was grabbed, the predator must be stunned enough to drop the creature), and 3. the creature sees the attack (or gets dropped because of it).<br>For the multiple-tame option, creature <i>types</i> count toward progress (multiple tames of a given type/color/species do not increase the count). Note that any befriendable creature type counts towards the total, including both Lizards and Squidcadas.",
+				paint: p,
+				toBin: new Uint8Array(b)
+			};
+		}
+
 		checkDescLen(thisname, desc.length, 7);
 		var v = [], i = [];
 		var items = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific Creature Type", , "NULL"], "creature type flag"); v.push(items[1]); i.push(items[2]);
-		// Normalize legacy formatter token "Wfriend" -> "friend" in desc[1]
-		if (typeof desc[1] === "string") {
-			var parts = desc[1].split("|");
-			if (parts.length > 0 && parts[parts.length - 1] === "Wfriend") {
-				parts[parts.length - 1] = "friend";
-				desc[1] = parts.join("|");
-			}
-		}
 		items = checkSettingBox(thisname, desc[1], ["System.String", , "Creature Type", , "friend"], "friend selection"); v.push(items[1]); i.push(items[2]);
 		items = checkSettingBox(thisname, desc[3], ["System.Int32", , "Amount", , "NULL"], "friend count"); v.push(items[1]); i.push(items[2]);
 		var amt = parseInt(v[2]), am = parseInt(desc[2]);
@@ -2795,11 +2845,11 @@ export const CHALLENGES = {
 		if (v[0] === "true") {
 			p.push( { type: "icon", value: entityIconAtlas(v[1]), scale: 1, color: entityIconColor(v[1]), rotation: 0 } );
 		} else if (v[0] === "false") {
+			p.push( { type: "break" } );
+			p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white } );
 		} else {
 			throw new TypeError(thisname + ": flag \"" + v[0] + "\" not 'true' or 'false'");
 		}
-		p.push( { type: "break" } );
-		p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white } );
 		var b = Array(4); b.fill(0);
 		//	start with classic version...
 		b[0] = challengeValue(thisname);
@@ -2816,7 +2866,7 @@ export const CHALLENGES = {
 			category: "Befriending creatures",
 			items: i,
 			values: v,
-			description: (v[0] === "true") ? ("Befriend " + entityNameQuantify(amt, entityDisplayText(v[1])) + ".") : ("Befriend [0/" + amt + "] unique creatures."),
+			description: (v[0] === "true") ? ("Befriend " + c + ".") : ("Befriend [0/" + amt + "] unique creatures."),
 			comments: "Taming occurs when a creature has been fed or rescued enough times to increase the player's reputation above some threshold, starting from a default depending on species, and the global and regional reputation of the player.<br>Feeding occurs when: 1. the player drops an edible item, creature or corpse, 2. within view of the creature, and 3. the creature bites that object. A \"happy lizard\" sound indicates success. The creature does not need to den with the item to increase reputation. Stealing the object back from the creature's jaws does not reduce reputation.<br>A rescue occurs when: 1. a creature sees or is grabbed by a threat, 2. the player attacks the threat (if the creatures was grabbed, the predator must be stunned enough to drop the creature), and 3. the creature sees the attack (or gets dropped because of it).<br>For the multiple-tame option, creature <i>types</i> count toward progress (multiple tames of a given type/color/species do not increase the count). Note that any befriendable creature type counts towards the total, including both Lizards and Squidcadas.",
 			paint: p,
 			toBin: new Uint8Array(b)
