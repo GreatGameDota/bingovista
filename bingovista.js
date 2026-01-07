@@ -1654,10 +1654,21 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoDontUseItemChallenge: function(desc) {
+		return CHALLENGES.BingoDontUseItemChallenge(desc);
+	},
 	BingoDontUseItemChallenge: function(desc) {
 		const thisname = "BingoDontUseItemChallenge";
 		//	desc of format ["System.String|BubbleGrass|Item type|0|banitem", "0", "0", "0", "0"]
 		checkDescLen(thisname, desc.length, 5);
+		// Normalize legacy formatter token "Wbanitem" -> "banitem" in desc[0]
+		if (typeof desc[0] === "string") {
+			var parts = desc[0].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wbanitem") {
+				parts[parts.length - 1] = "banitem";
+				desc[0] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Item type", , "banitem"], "item selection");
 		if (!ALL_ENUMS.banitem.includes(items[1])) {
 			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in banitem");
@@ -2784,11 +2795,11 @@ export const CHALLENGES = {
 		if (v[0] === "true") {
 			p.push( { type: "icon", value: entityIconAtlas(v[1]), scale: 1, color: entityIconColor(v[1]), rotation: 0 } );
 		} else if (v[0] === "false") {
-			p.push( { type: "break" } );
-			p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white } );
 		} else {
 			throw new TypeError(thisname + ": flag \"" + v[0] + "\" not 'true' or 'false'");
 		}
+		p.push( { type: "break" } );
+		p.push( { type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white } );
 		var b = Array(4); b.fill(0);
 		//	start with classic version...
 		b[0] = challengeValue(thisname);
@@ -2805,7 +2816,7 @@ export const CHALLENGES = {
 			category: "Befriending creatures",
 			items: i,
 			values: v,
-			description: (v[0] === "true") ? ("Befriend " + c + ".") : ("Befriend [0/" + amt + "] unique creatures."),
+			description: (v[0] === "true") ? ("Befriend " + entityNameQuantify(amt, entityDisplayText(v[1])) + ".") : ("Befriend [0/" + amt + "] unique creatures."),
 			comments: "Taming occurs when a creature has been fed or rescued enough times to increase the player's reputation above some threshold, starting from a default depending on species, and the global and regional reputation of the player.<br>Feeding occurs when: 1. the player drops an edible item, creature or corpse, 2. within view of the creature, and 3. the creature bites that object. A \"happy lizard\" sound indicates success. The creature does not need to den with the item to increase reputation. Stealing the object back from the creature's jaws does not reduce reputation.<br>A rescue occurs when: 1. a creature sees or is grabbed by a threat, 2. the player attacks the threat (if the creatures was grabbed, the predator must be stunned enough to drop the creature), and 3. the creature sees the attack (or gets dropped because of it).<br>For the multiple-tame option, creature <i>types</i> count toward progress (multiple tames of a given type/color/species do not increase the count). Note that any befriendable creature type counts towards the total, including both Lizards and Squidcadas.",
 			paint: p,
 			toBin: new Uint8Array(b)
@@ -3491,6 +3502,43 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	WatcherBingoHatchMothGrubChallenge: function(desc, _board) {
+		const thisname = "WatcherBingoHatchMothGrubChallenge";
+		//	desc of format ["System.Boolean|true|At once|0|NULL", "0", "System.Int32|3|Amount|1|NULL", "0", "0"]
+		checkDescLen(thisname, desc.length, 5);
+		var amounts = checkSettingBox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "egg count");
+		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
+		amt = Math.min(amt, CHAR_MAX);
+		if (isNaN(amt) || amt < 1)
+			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
+		var items = checkSettingBox(thisname, desc[0], ["System.Boolean", , "At once", , "NULL"], "one-cycle flag");
+		if (items[1] !== "true" && items[1] !== "false")
+			throw new TypeError(thisname + ": flag \"" + items[1] + "\" not 'true' or 'false'");
+		var p = [
+			{ type: "icon", value: entityIconAtlas("MothGrub"), scale: 1, color: entityIconColor("MothGrub"), rotation: 0 },
+			{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "icon", value: entityIconAtlas("BigMoth"), scale: 1, color: entityIconColor("BigMoth"), rotation: 0 },
+			{ type: "break" },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
+		];
+		if (items[1] === "true")
+			p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[3] = amt;
+		applyBool(b, 1, 4, items[1]);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Hatching Moth Grubs",
+			items: [amounts[2], items[2]],
+			values: [amounts[1], items[1]],
+			description: "Hatch " + entityNameQuantify(amt, entityDisplayText("MothGrub")) + ((items[1] === "true") ? " in one cycle." : "."),
+			comments: "Eggs must be hatched where the player is sheltering. Eggs stored in other shelters disappear and do not give credit towards this goal.",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
 };
 
 
@@ -3706,7 +3754,16 @@ const BingoEnum_Bannable = [
 	"HRGuard",
 	"Seed",
 	//	DLCSharedEnums.AbstractObjectType
-	"SingularityBomb"
+	"SingularityBomb",
+
+	"Rat",
+	"FireSpriteLarva",
+	"Tardigrade",
+	"Frog",
+	"SandGrub",
+	"Barnacle",
+	"GraffitiBomb",
+	"Boomerang",
 ];
 
 
