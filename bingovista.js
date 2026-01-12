@@ -3589,6 +3589,39 @@ export const CHALLENGES = {
 			toBin: new Uint8Array(b)
 		};
 	},
+	BingoScoreChallenge: function(desc) {
+		const thisname = "BingoScoreChallenge";
+		//	desc of format ["0", "System.Int32|271|Target Score|0|NULL", "System.Boolean|true|In one Cycle|0|NULL", "0", "0"]
+		checkDescLen(thisname, desc.length, 5);
+		var items = checkSettingBox(thisname, desc[1], ["System.Int32", , "Target Score", , "NULL"], "score goal");
+		var amt = parseInt(items[1]), am = parseInt(desc[0]);
+		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+			throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+		var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
+		if (oneCycleItems[1] !== "true" && oneCycleItems[1] !== "false")
+			throw new TypeError(thisname + ": flag \"" + oneCycleItems[1] + "\" not 'true' or 'false'");
+		var b = Array(5); b.fill(0);
+		b[0] = challengeValue(thisname);
+		applyShort(b, 3, amt);
+		b[2] = b.length - GOAL_LENGTH;
+		var p = [
+			{ type: "icon", value: "Multiplayer_Star", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "break" },
+			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white }
+		];
+		if (oneCycleItems[1] === "true")
+			p.push({ type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+		return {
+			name: thisname,
+			category: "Scoring points",
+			items: [items[2]],
+			values: [String(amt)],
+			description: "Earn " + amt + " points from creature kills" + (oneCycleItems[1] === "true" ? " in a single cycle." : "."),
+			comments: "",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
 };
 
 
