@@ -2100,7 +2100,7 @@ export const CHALLENGES = {
 			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
 			var p = [];
 			p.push({ type: "icon", value: "foodSymbol", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
-			p.push({ type: "icon", value: "FlowerMarker", scale: 1, color: RainWorldColors.SaturatedGold, rotation: 0 });
+			p.push({ type: "icon", value: entityIconAtlas("KarmaFlower"), scale: 1, color: RainWorldColors.SaturatedGold, rotation: 0 });
 			if (diffRegionItems[1] === "true")
 				p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 			p.push({ type: "break" });
@@ -2145,7 +2145,7 @@ export const CHALLENGES = {
 			comments: "With this goal present on the board, flowers are spawned in the world in their normal locations. The player obtains the benefit of consuming the flower (protecting karma level). While the goal is in progress, players <em>do not drop</em> the flower on death. After the goal is completed or locked, a flower can drop on death as normal.",
 			paint: [
 				{ type: "icon", value: "foodSymbol", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
-				{ type: "icon", value: "FlowerMarker", scale: 1, color: RainWorldColors.SaturatedGold, rotation: 0 },
+				{ type: "icon", value: entityIconAtlas("KarmaFlower"), scale: 1, color: RainWorldColors.SaturatedGold, rotation: 0 },
 				{ type: "break" },
 				{ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white }
 			],
@@ -4938,7 +4938,7 @@ const itemNameToIconAtlasMap = {
 	"FireSpear":        "Symbol_FireSpear",
 	"ElectricSpear":    "Symbol_ElectricSpear",
 	"Pearl":            "Symbol_Pearl",
-	"KarmaFlower":      "FlowerMarker",
+	"KarmaFlower":      "karmaflower",
 	"SeedCob":          "popcorn_plant",
 	"ExplosiveSpear":   "Symbol_FireSpear",
 
