@@ -1177,9 +1177,9 @@ export const CHALLENGES = {
 		};
 	},
 	WatcherBingoAllRegionsExceptChallenge: function(desc, _board) {
-		return CHALLENGES.BingoAllRegionsExcept(desc, _board);
+		return CHALLENGES.BingoAllRegionsExceptChallenge(desc, _board);
 	},
-	BingoAllRegionsExcept: function(desc, _board) {
+	BingoAllRegionsExceptChallenge: function(desc, _board) {
 		const thisname = "BingoAllRegionsExcept";
 		//	desc of format ["System.String|UW|Region|0|regionsreal", "SU|HI|DS|CC|GW|SH|VS|LM|SI|LF|UW|SS|SB|LC", "0", "System.Int32|13|Amount|1|NULL", "0", "0"]
 		checkDescLen(thisname, desc.length, 6);
@@ -1249,7 +1249,7 @@ export const CHALLENGES = {
 		v.push(desc[5]); i.push("bombed");
 		if (v[0] !== "true" && v[0] !== "false")
 			throw new TypeError(thisname + ": specific flag \"" + v[0] + "\" not 'true' or 'false'");
-		if (!BingoEnum_BombableOutposts.includes(v[1]))
+		if (!BingoEnum_BombableOutposts.includes(v[1].toUpperCase())) // Force all toll names to uppercase (for back compat)
 			throw new TypeError(thisname + ": \"" + v[1] + "\" not found in tolls");
 		if (v[2] !== "true" && v[2] !== "false")
 			throw new TypeError(thisname + ": pass flag \"" + v[2] + "\" not 'true' or 'false'");
@@ -1912,7 +1912,7 @@ export const CHALLENGES = {
 			var amt = parseInt(items[1]), am = parseInt(desc[3]);
 			if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
-			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "regions"], "region");
+			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "nootregions"], "region");
 			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
 			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "At once", , "NULL"], "one-cycle flag");
 			var p = [];
@@ -3474,8 +3474,16 @@ export const CHALLENGES = {
 		const thisname = "WatcherBingoCreaturePortalChallenge";
 		//	desc of format [System.String|Frog|Creature Type|1|Wtransport><0><System.Int32|2|Amount|0|NULL><empty><0><0>]
 		checkDescLen(thisname, desc.length, 6);
+		// Normalize legacy formatter token "Wtransport" -> "transport" in desc[0] (for back compat)
+		if (typeof desc[0] === "string") {
+			var parts = desc[0].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "Wtransport") {
+				parts[parts.length - 1] = "transport";
+				desc[0] = parts.join("|");
+			}
+		}
 		var v = [], i = [];
-		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Creature Type", , "Wtransport"], "transportable creature type"); v.push(items[1]); i.push(items[2]);
+		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Creature Type", , "transport"], "transportable creature type"); v.push(items[1]); i.push(items[2]);
 		if (creatureNameToDisplayTextMap[v[0]] === undefined)
 			throw new TypeError(thisname + ": \"" + v[0] + "\" not found in creatures");
 		var amounts = checkSettingBox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "warp count");
@@ -4181,25 +4189,25 @@ const BingoEnum_Pinnable = [
  *	Value type: string, room name (lowercase)
  */
 const BingoEnum_BombableOutposts = [
-	"su_c02",
-	"gw_c05",
-	"gw_c11",
-	"lf_e03",
-	"ug_toll",
-	"cl_a34",	//	customization-proofing
-	"cl_b27",
-	"lc_c10",
-	"lc_longslum",
-	"lc_rooftophop",
-	"lc_templetoll",
-	"lc_stripmallnew",
-	"lf_j01",
-	"oe_tower04",
-	"sb_topside",
+	"SU_C02",
+	"GW_C05",
+	"GW_C11",
+	"LF_E03",
+	"UG_TOLL",
+	"CL_A34",	//	customization-proofing
+	"CL_B27",
+	"LC_C10",
+	"LC_LONGSLUM",
+	"LC_ROOFTOPHOP",
+	"LC_TEMPLETOLL",
+	"LC_STRIPMALLNEW",
+	"LF_J01",
+	"OE_TOWER04",
+	"SB_TOPSIDE",
 
-	"warf_g01",
-	"wbla_f01",
-	"wskd_b41"
+	"WARF_G01",
+	"WBLA_F01",
+	"WSKD_B41"
 ];
 
 /**
