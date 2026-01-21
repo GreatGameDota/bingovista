@@ -3776,7 +3776,8 @@ const BingoEnum_Weapons = [
 
 	"GraffitiBomb",
 	"Boomerang",
-	"Frog"
+	"Frog",
+	"WaterNut",
 ];
 
 /**
@@ -5315,7 +5316,8 @@ const itemNameToIconColorMap = {
 	"RippleSpawn":     "#a9a4b2",
 	"PrinceBulb":      "#a9a4b2",
 	"Prince":          "#a9a4b2",
-	"KnotSpawn":       "#a9a4b2"
+	"KnotSpawn":       "#a9a4b2",
+	"KarmaFlower":     RainWorldColors.SaturatedGold,
 };
 
 
