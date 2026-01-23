@@ -2567,7 +2567,7 @@ export const CHALLENGES = {
 			var amt = parseInt(items[1]), am = parseInt(desc[3]);
 			if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
-			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "popcornRegions"], "region");
+			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "popcornregions"], "region");
 			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
 			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
 			var p = [];
@@ -3440,7 +3440,7 @@ export const CHALLENGES = {
 		var amt = parseInt(items[1]), am = parseInt(desc[3]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
-		var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "Wpoms"], "region");
+		var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "pomegranateregions"], "region");
 		var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
 		var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
 		var p = [];
@@ -3539,9 +3539,9 @@ export const CHALLENGES = {
 	},
 	WatcherBingoWeaverChallenge: function(desc, _board) {
 		const thisname = "WatcherBingoWeaverChallenge";
-		//	desc of format ["WRFA", "System.String|WRFA_A07|Portal Room|0|WweaverRooms", "0", "0"]
+		//	desc of format ["WRFA", "System.String|WRFA_A07|Portal Room|0|weaverrooms", "0", "0"]
 		checkDescLen(thisname, desc.length, 4);
-		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Portal Room", , "WweaverRooms"], "item selection");
+		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Portal Room", , "weaverrooms"], "item selection");
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
 		b[2] = b.length - GOAL_LENGTH;
