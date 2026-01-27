@@ -1330,7 +1330,7 @@ export const CHALLENGES = {
 		checkDescLen(thisname, desc.length, 7);
 		var speci = checkSettingBox(thisname, desc[0], ["System.Boolean", , "Specific Pearl", , "NULL"], "specific pearl flag");
 		if (speci[1] !== "true" && speci[1] !== "false")
-			throw new TypeError(thisname + ": starving flag \"" + speci[1] + "\" not 'true' or 'false'");
+			throw new TypeError(thisname + ": specific pearl flag \"" + speci[1] + "\" not 'true' or 'false'");
 		// Normalize legacy formatter token "Wpearls" -> "pearls" in desc[1]
 		if (typeof desc[1] === "string") {
 			var parts = desc[1].split("|");
@@ -1733,7 +1733,7 @@ export const CHALLENGES = {
 			{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white }
 		];
 		if (starv[1] === "true")
-			p.splice(2, 0, { type: "break" }, { type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.splice(2, 0, { type: "break" }, { type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		var b = Array(6); b.fill(0);
 		b[0] = challengeValue(thisname);
 		applyShort(b, 3, amt);
@@ -1793,7 +1793,7 @@ export const CHALLENGES = {
 		];
 		if (starv[1] === "true") {
 			p.push( { type: "break" } );
-			p.push( { type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push( { type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		}
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
@@ -2002,7 +2002,7 @@ export const CHALLENGES = {
 				{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
 				{ type: "break" },
 				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
-				{ type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
+				{ type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2237,7 +2237,7 @@ export const CHALLENGES = {
 		}
 		p.push( { type: "text", value: "[" + String(am) + "/" + v[2] + "]", color: RainWorldColors.Unity_white } );
 		if (v[7] === "true")
-			p.push( { type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push( { type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		if (v[5] === "true")
 			p.push( { type: "icon", value: "cycle_limit", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		if (v[8] === "true")
@@ -3374,7 +3374,7 @@ export const CHALLENGES = {
 		];
 		if (starv[1] === "true") {
 			p.push( { type: "break" } );
-			p.push( { type: "icon", value: "Multiplayer_Death", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push( { type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		}
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
