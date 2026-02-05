@@ -2537,6 +2537,7 @@ export const CHALLENGES = {
 		if (v[2] === "Any Region") {
 			p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		} else {
+			p.push( { type: "break" } );
 			p.push( { type: "text", value: v[2], color: RainWorldColors.Unity_white } );
 		}
 		p.push( { type: "break" } );
@@ -3370,10 +3371,10 @@ export const CHALLENGES = {
 		}
 		var p = [
 			{ type: "icon", value: "spinningtop", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "break" },
 			{ type: "text", value: ((speci[1] === "true") ? echor[1] : "[" + String(am) + "/" + amt + "]"), color: RainWorldColors.Unity_white }
 		];
 		if (starv[1] === "true") {
-			p.push( { type: "break" } );
 			p.push( { type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		}
 		var b = Array(4); b.fill(0);
@@ -3531,7 +3532,6 @@ export const CHALLENGES = {
 			description: "Visit Prince.",
 			comments: "",
 			paint: [
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "icon", value: "prince", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
