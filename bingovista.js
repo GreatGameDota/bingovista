@@ -3526,10 +3526,10 @@ export const CHALLENGES = {
 		b[2] = b.length - GOAL_LENGTH;
 		return {
 			name: thisname,
-			category: "Visiting Prince",
+			category: "Visiting the Prince",
 			items: [],
 			values: [],
-			description: "Visit Prince.",
+			description: "Visit the Prince.",
 			comments: "",
 			paint: [
 				{ type: "icon", value: "prince", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
