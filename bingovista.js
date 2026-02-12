@@ -4252,12 +4252,12 @@ const BingoEnum_BombedDict = [
 	"OE_TOWER04|True",
 	"SB_TOPSIDE|True",
 
-	"warf_g01|0,1",
-	"warf_g01|1,1",
-	"wbla_f01|0,1",
-	"wbla_f01|1,1",
-	"wskd_b41|0,1",
-	"wskd_b41|1,1",
+	"WARF_G01|0,1",
+	"WARF_G01|1,1",
+	"WBLA_F01|0,1",
+	"WBLA_F01|1,1",
+	"WSKD_B41|0,1",
+	"WSKD_B41|1,1",
 ];
 
 /**
