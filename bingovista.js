@@ -1214,6 +1214,7 @@ export const CHALLENGES = {
 			paint: [
 				{ type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+				{ type: "break" },
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
 				{ type: "break" },
 				{ type: "text", value: "[" + String(current) + "/" + String(required) + "]", color: RainWorldColors.Unity_white }
