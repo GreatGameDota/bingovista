@@ -58,8 +58,8 @@ const square = {
  *	65535 (unsigned). Somewhere around 30k seems reasonable enough for a
  *	rounded value?
  */
-const INT_MAX = 30000;
-const INT_MIN = -30000;
+const INT_MAX = 99999999;
+const INT_MIN = -99999999;
 /** As INT_MAX, but for challenges *very* unlikely to need >1 byte */
 const CHAR_MAX = 250;
 
@@ -1179,6 +1179,9 @@ export const CHALLENGES = {
 	WatcherBingoAllRegionsExceptChallenge: function(desc, _board) {
 		return CHALLENGES.BingoAllRegionsExceptChallenge(desc, _board);
 	},
+	BingoAllRegionsExcept: function(desc, _board) {
+		return CHALLENGES.BingoAllRegionsExceptChallenge(desc, _board);
+	},
 	BingoAllRegionsExceptChallenge: function(desc, _board) {
 		const thisname = "BingoAllRegionsExcept";
 		//	desc of format ["System.String|UW|Region|0|regionsreal", "SU|HI|DS|CC|GW|SH|VS|LM|SI|LF|UW|SS|SB|LC", "0", "System.Int32|13|Amount|1|NULL", "0", "0"]
@@ -1906,7 +1909,7 @@ export const CHALLENGES = {
 	},
 	BingoHatchNoodleChallenge: function(desc, _board) {
 		const thisname = "BingoHatchNoodleChallenge";
-		if (desc.length !== 4) {
+		if (desc.length !== 5) {
 			// Watcher
 			checkDescLen(thisname, desc.length, 8);
 			var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "item count");
@@ -3959,7 +3962,8 @@ const BingoEnum_FoodTypes = [
 	"Tardigrade",
 	"Frog",
 	"SandGrub",
-	"Barnacle"
+	"Barnacle",
+	"BigEel"
 ];
 
 /**
