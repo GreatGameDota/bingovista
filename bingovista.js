@@ -3956,6 +3956,7 @@ const BingoEnum_FoodTypes = [
 	"KarmaFlower",	//	and remaining possibilities why not (from IPlayerEdible references)
 	"FireEgg",
 	"SLOracleSwarmer",	//	guess I forgot one
+	"Seed",
 
 	"Rat",
 	"FireSpriteLarva",
