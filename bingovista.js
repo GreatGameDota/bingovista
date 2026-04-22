@@ -3545,6 +3545,14 @@ export const CHALLENGES = {
 		const thisname = "WatcherBingoWeaverChallenge";
 		//	desc of format ["WRFA", "System.String|WRFA_A07|Portal Room|0|weaverrooms", "0", "0"]
 		checkDescLen(thisname, desc.length, 4);
+		// Normalize legacy formatter token "WweaverRooms" -> "weaverrooms" in desc[1] (for back compat)
+		if (typeof desc[1] === "string") {
+			var parts = desc[1].split("|");
+			if (parts.length > 0 && parts[parts.length - 1] === "WweaverRooms") {
+				parts[parts.length - 1] = "weaverrooms";
+				desc[1] = parts.join("|");
+			}
+		}
 		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Portal Room", , "weaverrooms"], "item selection");
 		var b = Array(4); b.fill(0);
 		b[0] = challengeValue(thisname);
