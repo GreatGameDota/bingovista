@@ -1291,7 +1291,7 @@ export const CHALLENGES = {
 			{ type: "text", value: (v[0] === "false") ? ("[" + String(am) + "/" + String(amt) + "]") : v[1].toUpperCase(), color: RainWorldColors.Unity_white }
 		];
 		if (v[2] === "true")
-			p.splice(2, 0, { type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.splice(2, 0, { type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 } );
 		var b = Array(4); b.fill(0);
 		if (v[0] === "true") {
 			//	can use old version
@@ -1472,7 +1472,7 @@ export const CHALLENGES = {
 			comments: "When a creature is taken through a gate, that creature is added to a list and the gate is logged. If a gate already appears in the creature's list, taking that gate again will not advance the count. Thus, you can't grind progress by taking one gate back and forth. The list is stored per creature transported; thus, taking a new different creature does not advance the count, nor does piling multiple creatures into one gate. When the total gate count of any logged creature reaches the goal, credit is awarded.",
 			paint: [
 				{ type: "icon", value: entityIconAtlas(items[1]), scale: 1, color: entityIconColor(items[1]), rotation: 0 },
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 				{ type: "icon", value: "ShortcutGate", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "break" },
 				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white }
@@ -1889,7 +1889,7 @@ export const CHALLENGES = {
 		d += iteratorNameToDisplayTextMap[items[1]] + ".";
 		var p = [
 			{ type: "icon", value: "GuidanceNeuron", scale: 1, color: RainWorldColors.GuidanceNeuron, rotation: 0 },
-			{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 		]
 		p.push( { type: "icon", value: iteratorNameToIconAtlasMap[items[1]], scale: 1, color: iteratorNameToIconColorMap[items[1]], rotation: 0 } );
 		var b = Array(3); b.fill(0);
@@ -2058,7 +2058,7 @@ export const CHALLENGES = {
 		d += r;
 		var p = [ { type: "icon", value: entityIconAtlas(items[1]), scale: 1, color: entityIconColor(items[1]), rotation: 0 } ];
 		if (any[1] === "true") {
-			p.push( { type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			p.push( { type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 					{ type: "icon", value: "doubleshelter", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		} else {
 			p.unshift( { type: "icon", value: "ShelterMarker", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
@@ -2351,7 +2351,7 @@ export const CHALLENGES = {
 			comments: "",
 			paint: [
 				{ type: "icon", value: "Symbol_Neuron", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 				{ type: "icon", value: iteratorNameToIconAtlasMap[oracle], scale: 1, color: iteratorNameToIconColorMap[oracle], rotation: 0 },
 				{ type: "break" },
 				{ type: "text", value: "[" + String(am) + "/" + String(amt) + "]", color: RainWorldColors.Unity_white }
@@ -2436,7 +2436,7 @@ export const CHALLENGES = {
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
 				{ type: "icon", value: "Symbol_Pearl", scale: 1, color: entityIconColor("Pearl"), rotation: 0 },
 				{ type: "break" },
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 180 },
 				{ type: "break" },
 				{ type: "icon", value: iteratorNameToIconAtlasMap[oracle], scale: 1, color: iteratorNameToIconColorMap[oracle], rotation: 0 }
 			],
@@ -2482,7 +2482,7 @@ export const CHALLENGES = {
 		d += r + ".";
 		var p = [ { type: "icon", value: ((common[1] === "true") ? "pearlhoard_normal" : "pearlhoard_color"), scale: 1, color: entityIconColor("Pearl"), rotation: 0 } ];
 		if (any[1] === "true") {
-			p.push( { type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			p.push( { type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 					{ type: "icon", value: "doubleshelter", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
 		} else {
 			p.unshift( { type: "icon", value: "ShelterMarker", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
@@ -2667,7 +2667,7 @@ export const CHALLENGES = {
 			comments: "Credit is awarded when Five Pebbles resumes playing the pearl; wait for dialog to finish, and place the pearl within reach.",
 			paint: [
 				{ type: "icon", value: "memoriespearl", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 				{ type: "icon", value: iteratorNameToIconAtlasMap[oracle], scale: 1, color: iteratorNameToIconColorMap[oracle], rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
@@ -2959,7 +2959,7 @@ export const CHALLENGES = {
 			{ type: "break" }
 		];
 		if (v[0] !== "Any Region") p.push( { type: "text", value: v[0], color: RainWorldColors.Unity_white } );
-		p.push( { type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		p.push( { type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 } );
 		if (v[1] !== "Any Region") p.push( { type: "text", value: v[1], color: RainWorldColors.Unity_white } );
 		var b = Array(6); b.fill(0);
 		b[0] = challengeValue(thisname);
@@ -3132,7 +3132,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": delivery flag \"" + items[1] + "\" not 'true' or 'false'");
 		var p = [ { type: "icon", value: "Symbol_MoonCloak", scale: 1, color: entityIconColor("MoonCloak"), rotation: 0 } ];
 		if (items[1] === "true") {
-			p.push( { type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+			p.push( { type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 } );
 			p.push( { type: "icon", value: "GuidanceMoon", scale: 1, color: RainWorldColors.GuidanceMoon, rotation: 0 } );
 		}
 		var b = Array(3); b.fill(0);
@@ -3309,7 +3309,7 @@ export const CHALLENGES = {
 			description: "Visit " + iteratorNameToDisplayTextMap[oracle[1]] + ".",
 			comments: "",
 			paint: [
-				{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 				{ type: "icon", value: iteratorNameToIconAtlasMap[oracle[1]], scale: 1, color: iteratorNameToIconColorMap[oracle[1]], rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
@@ -3497,7 +3497,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
 		var p = [
 			{ type: "icon", value: entityIconAtlas(v[0]), scale: 1, color: entityIconColor(v[0]), rotation: 0 },
-			{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 			{ type: "icon", value: "portal", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 			{ type: "break" },
 			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
@@ -3585,7 +3585,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": flag \"" + items[1] + "\" not 'true' or 'false'");
 		var p = [
 			{ type: "icon", value: entityIconAtlas("MothGrub"), scale: 1, color: entityIconColor("MothGrub"), rotation: 0 },
-			{ type: "icon", value: "singlearrow", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+			{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 90 },
 			{ type: "icon", value: entityIconAtlas("BigMoth"), scale: 1, color: entityIconColor("BigMoth"), rotation: 0 },
 			{ type: "break" },
 			{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
@@ -3637,6 +3637,167 @@ export const CHALLENGES = {
 			values: [String(amt)],
 			description: "Earn " + amt + " points from creature kills" + (oneCycleItems[1] === "true" ? " in a single cycle." : "."),
 			comments: "",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoToysChallenge: function(desc) {
+		const thisname = "WatcherBingoToysChallenge";
+		//	desc of format ["0", "0"]
+		checkDescLen(thisname, desc.length, 2);
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Touch Watcher Toys",
+			items: [],
+			values: [],
+			description: "Touch all the Watcher toys in one cycle",
+			comments: "",
+			paint: [
+				{ type: "icon", value: entityIconAtlas("BallToy"), scale: 1, color: entityIconColor("BallToy"), rotation: 0 },
+				{ type: "icon", value: entityIconAtlas("WeirdToy"), scale: 1, color: entityIconColor("WeirdToy"), rotation: 0 },
+				{ type: "break" },
+				{ type: "text", value: "[0/4]", color: RainWorldColors.Unity_white },
+				{ type: "break" },
+				{ type: "icon", value: entityIconAtlas("SpinToy"), scale: 1, color: entityIconColor("SpinToy"), rotation: 0 },
+				{ type: "icon", value: entityIconAtlas("SoftToy"), scale: 1, color: entityIconColor("SoftToy"), rotation: 0 },
+			],
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoRivCellChallenge: function(desc) {
+		const thisname = "WatcherBingoRivCellChallenge";
+		//	desc of format ["0", "0"]
+		checkDescLen(thisname, desc.length, 2);
+		var b = Array(3); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Feeding the Rarefaction Cell to an Angler",
+			items: [],
+			values: [],
+			description: "Feed the Rarefaction Cell to an Angler (completes if you die).",
+			comments: "The Rarefaction Cell's immense power disturbs time itself; hence, this goal is awarded even if the player dies in the process. May our cycles meet again, little Water Dancer...",
+			paint: [
+				{ type: "icon", value: "Symbol_EnergyCell", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "icon", value: "Kill_Angler", scale: 1, color: entityIconColor("Angler"), rotation: 0 }
+			],
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoDaemonDropChallenge: function(desc, _board) {
+		const thisname = "WatcherBingoDaemonDropChallenge";
+		//	desc of format ["System.String|VultureGrub|Creature Type|0|daemon", "0", "0"]
+		checkDescLen(thisname, desc.length, 3);
+		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Creature Type", , "daemon"], "creature selection");
+		if (BingoEnum_Depthable[items[1]] === undefined && creatureNameToDisplayTextMap[items[1]] === undefined)
+			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in creatures");
+		var d = entityNameQuantify(1, items[1]);
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		if (BingoEnum_Transportable.includes(items[1]))
+			b[3] = enumToValue(items[1], "daemon");
+		else
+			b[3] = enumToValue(items[1], "creatures") + BINARY_TO_STRING_DEFINITIONS[challengeValue(thisname)].params[0].altthreshold - 1;
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Dropping a creature in the bottom of Daemon",
+			items: [items[2]],
+			values: [items[1]],
+			description: "Drop " + d + " into the bottom of Daemon drop room (WRSA_L01).",
+			comments: "Player, and creature of target type, must be in the room at the same time, and the creature's position must be below the drop." + "<br><a href=\"https://alduris.github.io/watcher-map/map.html?region=WRSA&room=WRSA_L01\" target=\"_blank\"> WRSA_L01 on Rain World Watcher Map</a>",
+			paint: [
+				{ type: "icon", value: entityIconAtlas(items[1]), scale: 1, color: entityIconColor(items[1]), rotation: 0 },
+				{ type: "break" },
+				{ type: "icon", value: "deathpiticon", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
+				{ type: "break" },
+				{ type: "text", value: "WRSA_L01", color: RainWorldColors.Unity_white }
+			],
+			toBin: new Uint8Array(b)
+		};
+	},
+	WatcherBingoPearlDeliveryChallenge: function(desc, _board) {
+		const thisname = "WatcherBingoPearlDeliveryChallenge";
+		//	desc of format ["System.String|WORA_WORA|Pearl|0|pearls", "System.Boolean|true|Common|1|NULL", "0", "0"]
+		checkDescLen(thisname, desc.length, 4);
+		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Pearl", , "pearls"], "pearl");
+		var common = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Common", , "NULL"], "common pearls flag");
+		if (DataPearlList.indexOf(items[1]) < 0)
+			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in pearls");
+		if (common[1] !== "true" && common[1] !== "false")
+			throw new TypeError(thisname + ": pearl flag \"" + common[1] + "\" not 'true' or 'false'");
+		var p = []
+		if (common[1] === "true") {
+			p.push({ type: "icon", value: "Symbol_Pearl", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			p.push({ type: "break" });
+			p.push({ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 180 });
+			p.push({ type: "break" });
+			p.push({ type: "icon", value: "pearlreader", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+		} else {
+			p.push({ type: "text", value: items[1].split("_")[0], color: RainWorldColors.Unity_white });
+			p.push({ type: "icon", value: "Symbol_Pearl", scale: 1, color: dataPearlToColorMap[items[1]], rotation: 0, background:
+				{ type: "icon", value: "radialgradient", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
+			});
+			p.push({ type: "break" });
+			p.push({ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 180 });
+			p.push({ type: "break" });
+			p.push({ type: "icon", value: "pearlreader", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+		}
+		var b = Array(4); b.fill(0);
+		b[0] = challengeValue(thisname);
+		b[3] = enumToValue(items[1], "pearls");
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: common[1] === "true" ? "Delivering common pearls to the Pearl Reader" : "Delivering colored pearls to the Pearl Reader",
+			items: [items[2]],
+			values: [items[1]],
+			description: common[1] === "true" ? "Deliver a common pearl to the Pearl Reader in Ancient Urban." : "Deliver " + regionToDisplayText(_board.character, items[1], "Any Subregion") + " colored pearl to the Pearl Reader in Ancient Urban.",
+			comments: "",
+			paint: p,
+			toBin: new Uint8Array(b)
+		};
+	},
+	BingoShelterChallenge: function(desc, _board) {
+		const thisname = "BingoShelterChallenge";
+		checkDescLen(thisname, desc.length, 8);	
+		var items = checkSettingBox(thisname, desc[4], ["System.Int32", , "Amount", , "NULL"], "shelter count");
+		var amt = parseInt(items[1]), am = parseInt(desc[3]);
+		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
+			throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
+		var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "shelterregions"], "region");
+		var uniqueSheltersItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Unique shelters", , "NULL"], "unique shelters");
+		var diffRegionItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "Different regions", , "NULL"], "different regions");
+		var p = [];
+		p.push({ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_green, rotation: 90 });
+		if (uniqueSheltersItems[1] === "false" && diffRegionItems[1] === "false") {
+			p.push( { type: "icon", value: "doubleshelter", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		} else {
+			p.push( { type: "icon", value: "ShelterMarker", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		}
+		if (diffRegionItems[1] === "true")
+			p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
+		p.push({ type: "break" });
+		if (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false") {
+			p.push({ type: "text", value: regionItems[1], color: RainWorldColors.Unity_white });
+			p.push({ type: "break" });
+		}
+		p.push({ type: "text", value: "[" + String(am) + "/" + items[1] + "]", color: RainWorldColors.Unity_white });
+		var b = Array(5); b.fill(0);
+		b[0] = challengeValue(thisname);
+		applyShort(b, 3, amt);
+		b[2] = b.length - GOAL_LENGTH;
+		return {
+			name: thisname,
+			category: "Rest in shelters",
+			items: [items[2]],
+			values: [String(amt)],
+			description: "Rest in " + entityNameQuantify(amt, "shelters", uniqueSheltersItems[1] === "true" && diffRegionItems[1] === "false") + (regionItems[1] !== "Any Region" && diffRegionItems[1] === "false" ? " in " + regionToDisplayText(_board.character, regionItems[1], "Any Subregion") : "") + (diffRegionItems[1] === "true" ? " in different regions" : "") + ".",
+			comments: "Rest in multiple shelters, in different regions or unique shelters.",
 			paint: p,
 			toBin: new Uint8Array(b)
 		};
@@ -4159,7 +4320,8 @@ const BingoEnum_Depthable = [
 	"TubeWorm",
 	"SmallCentipede",
 	"Snail",
-	"LanternMouse"
+	"LanternMouse",
+	"Tartigrade",
 ];
 
 /**
@@ -5812,6 +5974,7 @@ const ALL_ENUMS = {
 	"items":          Object.keys(itemNameToDisplayTextMap),
 	"pearls":         DataPearlList.slice(2),
 	"depths":         BingoEnum_Depthable,
+	"daemon":         BingoEnum_Depthable,
 	"expobject":      BingoEnum_expobject,
 	"craft":          BingoEnum_CraftableItems,
 	"banitem":        BingoEnum_Bannable,
@@ -6813,10 +6976,12 @@ function challengeTextToAbstract(desc, template, thisname) {
  *	itemNameToDisplayTextMap), converting it to the English singular case
  *	("a Batfly", etc.).
  */
-function entityNameQuantify(n, s) {
+function entityNameQuantify(n, s, unique = false) {
 	if (n != 1)
-		return String(n) + " " + s;
+		return String(n) + (unique ? " unique " : " ") + s;
 	s = s.replace(/Mice$/, "Mouse").replace(/ies$/, "y").replace(/ches$/, "ch").replace(/s$/, "");
+	if (unique)
+		return "a unique " + s;
 	if (/^[AEIOU]/i.test(s))
 		s = "an " + s;
 	else
