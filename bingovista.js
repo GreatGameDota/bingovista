@@ -3493,8 +3493,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": \"" + v[0] + "\" not found in creatures");
 		var amounts = checkSettingBox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "warp count");
 		var amt = parseInt(amounts[1]), am = parseInt(desc[1]);
-		amt = Math.min(amt, CHAR_MAX);
-		if (isNaN(amt) || amt < 1)
+		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
 		var p = [
 			{ type: "icon", value: entityIconAtlas(v[0]), scale: 1, color: entityIconColor(v[0]), rotation: 0 },
@@ -4445,7 +4444,8 @@ const BingoEnum_ArenaUnlocksGreen = [
 	"Rivulet",
 	"Saint",
 	"Spearmaster",
-	"Watcher"
+	"Watcher",
+	"Red"
 ];
 
 /**
