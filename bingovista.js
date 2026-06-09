@@ -1216,7 +1216,7 @@ export const CHALLENGES = {
 			comments: "This challenge is potentially quite customizable; only regions in the list need to be entered. Normally, the list is populated with all campaign story regions (i.e. corresponding Wanderer pips), so that progress can be checked on the sheltering screen. All that matters towards completion, is Progress equaling Total; thus we can set a lower bar and play a \"The Wanderer\"-lite; or we could set a specific collection of regions to enter, to entice players towards them. Downside: the latter functionality is not currently supported in-game: the region list is something of a mystery unless viewed and manually tracked. (This goal generates with all regions listed, so that all will contribute towards the goal.)",
 			paint: [
 				{ type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
-				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+				{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
 				{ type: "break" },
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
 				{ type: "break" },
@@ -1691,7 +1691,7 @@ export const CHALLENGES = {
 			description: "Never " + ((desc[1] === "1") ? "eat" : "use") + " " + entityDisplayText(items[1]) + ".",
 			comments: "\"Using\" an item involves throwing a throwable item, eating a food item, or holding any other type of item for 5 seconds. (When sheltering with insufficient food pips (currently eaten), food items in the shelter are consumed automatically. Auto-eating on shelter <em>will not</em> count against this goal!)",
 			paint: [
-				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+				{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
 				{ type: "icon", value: entityIconAtlas(items[1]), scale: 1, color: entityIconColor(items[1]), rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
@@ -1844,7 +1844,7 @@ export const CHALLENGES = {
 			description: "Enter " + r + ".",
 			comments: "",
 			paint: [
-				{ type: "icon", value: "keyShiftA", scale: 1, color: RainWorldColors.Unity_green, rotation: 90 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_green, rotation: 90 },
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white }
 			],
 			toBin: new Uint8Array(b)
@@ -2005,7 +2005,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "completechallenge", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "text", value: "[" + String(am) + "/" + amt + "]", color: RainWorldColors.Unity_white },
 				{ type: "break" },
-				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+				{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
 				{ type: "icon", value: "MartyrA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
@@ -2378,7 +2378,7 @@ export const CHALLENGES = {
 				{ type: "icon", value: "commerce", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "icon", value: "Kill_Scavenger", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 },
 				{ type: "break" },
-				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 }
+				{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 }
 			],
 			toBin: new Uint8Array(b)
 		};
@@ -2405,7 +2405,7 @@ export const CHALLENGES = {
 			description: "Do not enter " + regionToDisplayText(_board.character, items[1], "Any Subregion") + ".",
 			comments: "",
 			paint: [
-				{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+				{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white }
 			],
 			toBin: new Uint8Array(b)
@@ -3117,7 +3117,7 @@ export const CHALLENGES = {
 			comments: "",
 			paint: [
 				{ type: "text", value: items[1], color: RainWorldColors.Unity_white },
-				{ type: "icon", value: "keyShiftA", scale: 1, color: RainWorldColors.EnterFrom, rotation: 90 },
+				{ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.EnterFrom, rotation: 90 },
 				{ type: "text", value: itemTo[1], color: RainWorldColors.Unity_white }
 			],
 			toBin: new Uint8Array(b)
@@ -3234,7 +3234,7 @@ export const CHALLENGES = {
 				throw new TypeError(thisname + ": \"" + items[1] + "\" not found in creatures");
 		}
 		var p = [
-			{ type: "icon", value: "buttonCrossA", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
+			{ type: "icon", value: "buttonCrossB", scale: 1, color: RainWorldColors.Unity_red, rotation: 0 },
 			{ type: "icon", value: "Multiplayer_Bones", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 }
 		];
 		if (items[1] !== "Any Creature")
@@ -3732,7 +3732,7 @@ export const CHALLENGES = {
 			throw new TypeError(thisname + ": pearl flag \"" + common[1] + "\" not 'true' or 'false'");
 		var p = []
 		if (common[1] === "true") {
-			p.push({ type: "icon", value: "Symbol_Pearl", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			p.push({ type: "icon", value: "Symbol_Pearl", scale: 1, color: entityIconColor("Pearl"), rotation: 0 });
 			p.push({ type: "break" });
 			p.push({ type: "icon", value: "keyShiftB", scale: 1, color: RainWorldColors.Unity_white, rotation: 180 });
 			p.push({ type: "break" });
