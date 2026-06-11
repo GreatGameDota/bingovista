@@ -6980,7 +6980,8 @@ function challengeTextToAbstract(desc, template, thisname) {
 function entityNameQuantify(n, s, unique = false) {
 	if (n != 1)
 		return String(n) + (unique ? " unique " : " ") + s;
-	s = s.replace(/Mice$/, "Mouse").replace(/ies$/, "y").replace(/ches$/, "ch").replace(/s$/, "");
+	if (s !== "Bubble Grass")
+		s = s.replace(/Mice$/, "Mouse").replace(/ies$/, "y").replace(/ches$/, "ch").replace(/s$/, "");
 	if (unique)
 		return "a unique " + s;
 	if (/^[AEIOU]/i.test(s))
