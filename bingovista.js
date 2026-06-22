@@ -2576,7 +2576,7 @@ export const CHALLENGES = {
 			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
 			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "In one Cycle", , "NULL"], "one-cycle flag");
 			var p = [];
-			p.push({ type: "icon", value: "Symbol_Spear", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 });
+			p.push({ type: "icon", value: "Symbol_Spear", scale: 1, color: entityIconColor("Default"), rotation: 0 });
 			p.push({ type: "icon", value: "popcorn_plant", scale: 1, color: RainWorldColors.popcorn_plant, rotation: 0 });
 			if (diffRegionItems[1] === "true")
 				p.push( { type: "icon", value: "TravellerA", scale: 1, color: RainWorldColors.Unity_white, rotation: 0 } );
