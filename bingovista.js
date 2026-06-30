@@ -1412,15 +1412,15 @@ export const CHALLENGES = {
 	},
 	BingoCraftChallenge: function(desc) {
 		const thisname = "BingoCraftChallenge";
-		//	desc of format ["System.String|JellyFish|Item to Craft|0|craft", "System.Int32|5|Amount|1|NULL", "0", "0", "0"]
-		checkDescLen(thisname, desc.length, 5);
-		var items = checkSettingBox(thisname, desc[0], ["System.String", , "Item to Craft", , "craft"], "item selection");
+		//	desc of format ["0", "System.String|JellyFish|Item to Craft|0|craft", "System.Int32|5|Amount|1|NULL", "0", "0", "0"]
+		checkDescLen(thisname, desc.length, 6);
+		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Item to Craft", , "craft"], "item selection");
 		if (!BingoEnum_CraftableItems.includes(items[1])) {
 			throw new TypeError(thisname + ": \"" + items[1] + "\" not found in craft");
 		}
 		var d = entityDisplayText(items[1]);
-		var amounts = checkSettingBox(thisname, desc[1], ["System.Int32", , "Amount", , "NULL"], "amount selection");
-		var amt = parseInt(amounts[1]), am = parseInt(desc[2]);
+		var amounts = checkSettingBox(thisname, desc[2], ["System.Int32", , "Amount", , "NULL"], "amount selection");
+		var amt = parseInt(amounts[1]), am = parseInt(desc[3]);
 		if (isNaN(amt) || amt < 1 || amt > INT_MAX)
 			throw new TypeError(thisname + ": amount \"" + amounts[1] + "\" not a number or out of range");
 		var b = Array(6); b.fill(0);
@@ -4096,7 +4096,14 @@ const BingoEnum_CraftableItems = [
 	"SmallNeedleWorm",
 	"Hazer",
 	"TubeWorm",
-	"Snail"
+	"Snail",
+
+	"FireSpriteLarva",
+	"GraffitiBomb",
+	"Tardigrade",
+	"Rat",
+	"SandGrub",
+	"Frog"
 ];
 
 /**
