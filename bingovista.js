@@ -1413,6 +1413,9 @@ export const CHALLENGES = {
 	BingoCraftChallenge: function(desc) {
 		const thisname = "BingoCraftChallenge";
 		//	desc of format ["0", "System.String|JellyFish|Item to Craft|0|craft", "System.Int32|5|Amount|1|NULL", "0", "0", "0"]
+		if (desc.length == 5) {
+			desc.unshift("0"); // < v2.5
+		}
 		checkDescLen(thisname, desc.length, 6);
 		var items = checkSettingBox(thisname, desc[1], ["System.String", , "Item to Craft", , "craft"], "item selection");
 		if (!BingoEnum_CraftableItems.includes(items[1])) {
