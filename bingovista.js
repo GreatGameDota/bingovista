@@ -3704,7 +3704,7 @@ export const CHALLENGES = {
 		if (BingoEnum_Transportable.includes(items[1]))
 			b[3] = enumToValue(items[1], "daemon");
 		else
-			b[3] = enumToValue(items[1], "creatures") + BINARY_TO_STRING_DEFINITIONS[challengeValue(thisname)].params[0].altthreshold - 1;
+			b[3] = enumToValue(items[1], "creatures");
 		b[2] = b.length - GOAL_LENGTH;
 		return {
 			name: thisname,
