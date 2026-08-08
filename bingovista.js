@@ -1921,6 +1921,11 @@ export const CHALLENGES = {
 				throw new TypeError(thisname + ": amount \"" + items[1] + "\" not a number or out of range");
 			var regionItems = checkSettingBox(thisname, desc[0], ["System.String", , "Region", , "nootregions"], "region");
 			var diffRegionItems = checkSettingBox(thisname, desc[1], ["System.Boolean", , "Different Regions", , "NULL"], "diff regions");
+			var _parts = desc[2].split("|");
+			if (_parts.length === 5 && _parts[2] === "At Once") {
+				_parts[2] = "At once";
+				desc[2] = _parts.join("|");
+			}
 			var oneCycleItems = checkSettingBox(thisname, desc[2], ["System.Boolean", , "At once", , "NULL"], "one-cycle flag");
 			var p = [];
 			p.push({ type: "icon", value: entityIconAtlas("NeedleEgg"), scale: 1, color: entityIconColor("NeedleEgg"), rotation: 0 });
